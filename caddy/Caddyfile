@@ -1,0 +1,41 @@
+# Three isolated listeners so each protocol can be forced without ALPN ambiguity:
+#   8443 = HTTP/1.1 (TCP), 8444 = HTTP/2 (TCP), 8445 = HTTP/3 (QUIC/UDP).
+# `tls internal` uses Caddy's built-in CA (closed, offline environment).
+# Note: Go cannot serve h2 without h1, so :8444 also accepts h1.1 
+# k6 negotiates h2 via ALPN.
+
+{
+	admin :2019
+	metrics
+	auto_https disable_redirects
+
+	log {
+		output stdout
+		format json
+	}
+
+	servers :8443 {
+		protocols h1
+	}
+	servers :8444 {
+		protocols h2
+	}
+	servers :8445 {
+		protocols h3
+	}
+}
+
+caddy:8443 {
+	tls internal
+	reverse_proxy backend:3000
+}
+
+caddy:8444 {
+	tls internal
+	reverse_proxy backend:3000
+}
+
+caddy:8445 {
+	tls internal
+	reverse_proxy backend:3000
+}
