@@ -1,0 +1,293 @@
+# =============================================================================
+# Research Testbed: HTTP/1.1 vs HTTP/2 vs HTTP/3 on a REST API
+# -----------------------------------------------------------------------------
+# Topology (see README for the ASCII architecture diagram):
+#   k6 --(edge_net)--> Caddy --(backend_net)--> backend (Express)
+#   docker-tc attaches netem/tbf rules to Caddy's *edge* interface only.
+#   cAdvisor -> Prometheus <- k6 (remote write); Grafana -> Prometheus.
+#
+# All resource limits follow the methodology table so that the load generator
+# never competes with the server for CPU/RAM (measurement bias control).
+#
+# Requires: Docker Engine + Docker Compose v2.20+ on a LINUX host
+#           (docker-tc/netem/nsenter are Linux-only).
+# =============================================================================
+name: http-testbed
+
+# --------------------------------------------------------------------------- #
+# Reusable resource limit anchors
+# --------------------------------------------------------------------------- #
+# We use the classic `cpus` / `mem_limit` keys because Docker Compose enforces
+# them for BOTH `docker compose up` and `docker compose run` (the 150 runs use
+# `run`). They encode the methodology limits exactly:
+#   backend 1 vCPU / 1 GB, caddy 1 vCPU / 1 GB,
+#   docker-tc 1 vCPU / 0.5 GB, k6 2 vCPU / 1 GB.
+# --------------------------------------------------------------------------- #
+x-limits-backend: &limits-backend
+  cpus: "1.0"
+  mem_limit: 1g
+
+x-limits-caddy: &limits-caddy
+  cpus: "1.0"
+  mem_limit: 1g
+
+x-limits-docker-tc: &limits-docker-tc
+  cpus: "1.0"
+  mem_limit: 512m
+
+x-limits-k6: &limits-k6
+  cpus: "2.0"
+  mem_limit: 1g
+
+services:
+  # ------------------------------------------------------------------------- #
+  # 1. Application server: single static GET endpoint, no DB, no I/O.
+  # ------------------------------------------------------------------------- #
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: http-testbed/backend:latest
+    container_name: backend
+    <<: *limits-backend
+    # Batasan #2: pin the system-under-test to Performance cores only (never
+    # E-cores). Defaults target an i7-12650H where logical CPUs 0-11 are the
+    # P-core threads. VERIFY on your host with `lscpu -e` (inside WSL2 if on
+    # Windows) and override CPUSET_* in .env. See .env.example for the WSL2
+    # caveat: docker cpuset alone does not pin the WSL2 VM to host P-cores.
+    cpuset: "${CPUSET_BACKEND:-0-1}"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+    networks:
+      - backend_net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 5s
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------------- #
+  # 2. Caddy: TLS termination + 3 isolated protocol listeners.
+  #    8443 = HTTP/1.1 only (TCP)
+  #    8444 = HTTP/2 only   (TCP)
+  #    8445 = HTTP/3 only   (QUIC over UDP)
+  #    All three reverse-proxy to backend:3000 over plain internal HTTP.
+  # ------------------------------------------------------------------------- #
+  caddy:
+    image: caddy:2.11.4
+    container_name: caddy
+    <<: *limits-caddy
+    # System-under-test: pin to P-cores (see backend). Distinct from backend's
+    # set so the two never share a core during measurement.
+    cpuset: "${CPUSET_CADDY:-2-3}"
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8443:8443"       # HTTP/1.1
+      - "8444:8444"       # HTTP/2
+      - "8445:8445"       # HTTP/3 (TCP fallback / diagnostics)
+      - "8445:8445/udp"   # HTTP/3 (QUIC -- MUST be open on the host firewall)
+      - "2019:2019"       # Caddy admin API + /metrics (debugging only)
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - edge_net
+      - backend_net
+      - monitoring_net
+    healthcheck:
+      # Admin API answers on :2019 once the server has loaded the config.
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:2019/config/"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 3s
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------------- #
+  # 3. docker-tc: network emulation controller (bandwidth/delay/jitter/loss).
+  #    Runs on the HOST network + host PID namespace so it can `nsenter` into
+  #    Caddy's network namespace and call `tc`. Controlled via REST API :4080.
+  #    NOTE: the upstream lukaszlach/docker-tc image cannot emulate *jitter*,
+  #    so this project ships an API-compatible extended image (see docker-tc/).
+  # ------------------------------------------------------------------------- #
+  docker-tc:
+    build:
+      context: ./docker-tc
+      dockerfile: Dockerfile
+    image: http-testbed/docker-tc:latest
+    container_name: docker-tc
+    <<: *limits-docker-tc
+    # Support plane: kept off the SUT cores so netem control never contends
+    # with backend/caddy/k6.
+    cpuset: "${CPUSET_SUPPORT:-8-11}"
+    network_mode: host
+    pid: host
+    privileged: true
+    environment:
+      HTTP_PORT: "4080"
+      HTTP_BIND: "0.0.0.0"
+      TARGET_CONTAINER: "caddy"
+      EDGE_SUBNET_PREFIX: "172.28."
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:4080/health')"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------------- #
+  # 4. k6: load generator. Built with xk6 + xk6-http3 so a SINGLE script can
+  #    exercise HTTP/1.1, HTTP/2 and HTTP/3. Started on demand by
+  #    scripts/run_experiments.sh via `docker compose run --rm k6 ...`.
+  # ------------------------------------------------------------------------- #
+  k6:
+    build:
+      context: ./k6
+      dockerfile: Dockerfile
+    image: http-testbed/k6:latest
+    <<: *limits-k6
+    # Load generator on its own P-cores so it never competes with the SUT
+    # (measurement-bias control, methodology 3.x). 2 vCPU -> 4 threads here.
+    cpuset: "${CPUSET_K6:-4-7}"
+    depends_on:
+      caddy:
+        condition: service_healthy
+    # The service is idle by default; the automation overrides the command.
+    command: ["version"]
+    environment:
+      # Prometheus remote-write target (resolved on monitoring_net).
+      K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
+      K6_PROMETHEUS_RW_PUSH_INTERVAL: "1s"
+      K6_PROMETHEUS_RW_TREND_STATS: "avg,min,max,med,p(50),p(90),p(95),p(99),count"
+      K6_PROMETHEUS_RW_STALE_MARKERS: "true"
+    volumes:
+      - ./k6/script.js:/scripts/script.js:ro
+      - ./results:/results
+    networks:
+      - edge_net
+      - monitoring_net
+    restart: "no"
+
+  # ------------------------------------------------------------------------- #
+  # 5. cAdvisor: per-container CPU / memory from cgroups.
+  # ------------------------------------------------------------------------- #
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    # cAdvisor needs privileged cgroup/sys access; no artificial limits so it
+    # never throttles while collecting metrics.
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    command:
+      - --docker_only=true
+      - --housekeeping_interval=1s
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring_net
+    cpus: "1.0"
+    mem_limit: 512m
+    # Monitoring plane off the SUT cores (see CPUSET_SUPPORT).
+    cpuset: "${CPUSET_SUPPORT:-8-11}"
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------------- #
+  # 6. Prometheus: scrapes cAdvisor (1s), receives k6 remote write.
+  # ------------------------------------------------------------------------- #
+  prometheus:
+    image: prom/prometheus:v3.13.3
+    container_name: prometheus
+    user: root
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      # Long retention: must cover the full 150-run campaign + analysis.
+      - --storage.tsdb.retention.time=30d
+      - --web.enable-lifecycle
+      # Required to accept k6's `experimental-prometheus-rw` output.
+      - --web.enable-remote-write-receiver
+      - --query.lookback-delta=5m
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring_net
+    cpuset: "${CPUSET_SUPPORT:-8-11}"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9090/-/ready"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------------- #
+  # 7. Grafana: auto-provisioned datasource + dashboard.
+  # ------------------------------------------------------------------------- #
+  grafana:
+    image: grafana/grafana:13.0.8
+    container_name: grafana
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/http-testbed.json
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring_net
+    cpuset: "${CPUSET_SUPPORT:-8-11}"
+    restart: unless-stopped
+
+# --------------------------------------------------------------------------- #
+# Networks: separate the client-facing link (edge_net, which is emulated)
+# from the server link (backend_net) and the observability plane
+# (monitoring_net). Fixed subnets make interface auto-detection deterministic.
+# --------------------------------------------------------------------------- #
+networks:
+  edge_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+  backend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/24
+  monitoring_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+
+volumes:
+  caddy_data:
+  caddy_config:
+  prometheus_data:
+  grafana_data:

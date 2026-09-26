@@ -1,0 +1,214 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "id": 1,
+      "title": "Throughput (requests/sec)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(k6_reqs_total{protocol=~\"$protocol\", scenario=~\"$scenario\"}[1m])) by (protocol, scenario)",
+          "legendFormat": "{{protocol}} / {{scenario}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Latency percentiles (ms)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": { "drawStyle": "line", "fillOpacity": 0, "lineWidth": 2 },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "refId": "P50",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(k6_req_duration_ms_p50{protocol=~\"$protocol\", scenario=~\"$scenario\", phase=\"sustained\"}) by (protocol, scenario)",
+          "legendFormat": "p50 {{protocol}}/{{scenario}}"
+        },
+        {
+          "refId": "P90",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(k6_req_duration_ms_p90{protocol=~\"$protocol\", scenario=~\"$scenario\", phase=\"sustained\"}) by (protocol, scenario)",
+          "legendFormat": "p90 {{protocol}}/{{scenario}}"
+        },
+        {
+          "refId": "P95",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(k6_req_duration_ms_p95{protocol=~\"$protocol\", scenario=~\"$scenario\", phase=\"sustained\"}) by (protocol, scenario)",
+          "legendFormat": "p95 {{protocol}}/{{scenario}}"
+        },
+        {
+          "refId": "P99",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(k6_req_duration_ms_p99{protocol=~\"$protocol\", scenario=~\"$scenario\", phase=\"sustained\"}) by (protocol, scenario)",
+          "legendFormat": "p99 {{protocol}}/{{scenario}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Error rate (%)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "100 * avg(k6_req_errors_rate{protocol=~\"$protocol\", scenario=~\"$scenario\"}) by (protocol, scenario)",
+          "legendFormat": "{{protocol}} / {{scenario}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "CPU usage (%) - Caddy & Backend",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(container_cpu_usage_seconds_total{name=~\"caddy|backend\"}[1m])) by (name) * 100",
+          "legendFormat": "{{name}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Memory usage (MB) - Caddy & Backend",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes",
+          "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(container_memory_working_set_bytes{name=~\"caddy|backend\"}) by (name) / 1048576",
+          "legendFormat": "{{name}}"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["http-testbed", "thesis"],
+  "templating": {
+    "list": [
+      {
+        "name": "protocol",
+        "label": "Protocol",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(k6_reqs_total, protocol)",
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".*",
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "refresh": 1,
+        "sort": 1
+      },
+      {
+        "name": "scenario",
+        "label": "Scenario",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(k6_reqs_total, scenario)",
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".*",
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "refresh": 1,
+        "sort": 1
+      },
+      {
+        "name": "repetition",
+        "label": "Repetition",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(k6_reqs_total, repetition)",
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".*",
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "refresh": 1,
+        "sort": 1
+      }
+    ]
+  },
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "HTTP/1.1 vs HTTP/2 vs HTTP/3 Testbed",
+  "uid": "http-testbed",
+  "version": 1
+}

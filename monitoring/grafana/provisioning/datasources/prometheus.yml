@@ -1,0 +1,15 @@
+# Grafana datasource provisioning - Prometheus is the only datasource needed.
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    uid: prometheus
+    isDefault: true
+    editable: false
+    jsonData:
+      timeInterval: 1s
+      # Render latency as milliseconds, matching the k6 trend unit.
+      httpMethod: POST

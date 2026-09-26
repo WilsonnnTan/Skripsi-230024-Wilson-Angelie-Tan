@@ -1,0 +1,15 @@
+# Grafana dashboard provider - loads every JSON dashboard found in the
+# mounted /var/lib/grafana/dashboards directory at startup.
+apiVersion: 1
+
+providers:
+  - name: http-testbed
+    orgId: 1
+    folder: ""
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false
