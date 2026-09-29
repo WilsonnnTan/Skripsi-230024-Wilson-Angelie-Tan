@@ -145,13 +145,12 @@ services:
     restart: unless-stopped
 
   # ------------------------------------------------------------------------- #
-  # 4. k6: load generator. Built with xk6 + xk6-http3 so a SINGLE script can
-  #    exercise HTTP/1.1, HTTP/2 and HTTP/3. Started on demand by
-  #    scripts/run_experiments.sh via `docker compose run --rm k6 ...`.
+  # 4a. k6 (HTTP/1.1 + HTTP/2): load generator on a stock k6 v1.8.1. Started on
+  #     demand by scripts/run_experiments.sh via `docker compose run --rm k6`.
   # ------------------------------------------------------------------------- #
   k6:
     build:
-      context: ./k6
+      context: ./k6/http1.1-http2
       dockerfile: Dockerfile
     image: http-testbed/k6:latest
     <<: *limits-k6
@@ -170,7 +169,36 @@ services:
       K6_PROMETHEUS_RW_TREND_STATS: "avg,min,max,med,p(50),p(90),p(95),p(99),count"
       K6_PROMETHEUS_RW_STALE_MARKERS: "true"
     volumes:
-      - ./k6/script.js:/scripts/script.js:ro
+      - ./k6/http1.1-http2/script.js:/scripts/script.js:ro
+      - ./results:/results
+    networks:
+      - edge_net
+      - monitoring_net
+    restart: "no"
+
+  # ------------------------------------------------------------------------- #
+  # 4b. k6 (HTTP/3): separate image because xk6-http3 v0.2.0 pins k6 v0.48.0.
+  #     Selected automatically by run_experiments.sh for the http3 protocol.
+  #     Shares the k6 cpuset — the two k6 services never run simultaneously.
+  # ------------------------------------------------------------------------- #
+  k6-http3:
+    build:
+      context: ./k6/http3
+      dockerfile: Dockerfile
+    image: http-testbed/k6-http3:latest
+    <<: *limits-k6
+    cpuset: "${CPUSET_K6:-4-7}"
+    depends_on:
+      caddy:
+        condition: service_healthy
+    command: ["version"]
+    environment:
+      K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
+      K6_PROMETHEUS_RW_PUSH_INTERVAL: "1s"
+      K6_PROMETHEUS_RW_TREND_STATS: "avg,min,max,med,p(50),p(90),p(95),p(99),count"
+      K6_PROMETHEUS_RW_STALE_MARKERS: "true"
+    volumes:
+      - ./k6/http3/script.js:/scripts/script.js:ro
       - ./results:/results
     networks:
       - edge_net
@@ -181,21 +209,32 @@ services:
   # 5. cAdvisor: per-container CPU / memory from cgroups.
   # ------------------------------------------------------------------------- #
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    image: gcr.io/cadvisor/cadvisor:v0.55.1
     container_name: cadvisor
     # cAdvisor needs privileged cgroup/sys access; no artificial limits so it
     # never throttles while collecting metrics.
     privileged: true
+    # Host cgroup namespace. WSL2/Docker Desktop is cgroup v2, and by default a
+    # container gets a PRIVATE cgroup namespace, so cAdvisor only sees its own
+    # cgroup as "/" and reports ZERO per-container series (only id="/"). Joining
+    # the host cgroup ns lets it see every sibling container's cgroup, which is
+    # what makes the per-container CPU/mem series (and their compose-service
+    # labels, enriched via the docker socket mounted below) appear at all.
+    cgroup: host
     devices:
       - /dev/kmsg
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/containerd/containerd.sock:/run/containerd/containerd.sock:ro
       - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
+      - /var/lib/containerd:/var/lib/containerd:ro
     command:
-      - --docker_only=true
+      # - --docker_only=true
       - --housekeeping_interval=1s
     ports:
       - "8080:8080"
@@ -252,7 +291,7 @@ services:
       GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:-admin}
       GF_USERS_ALLOW_SIGN_UP: "false"
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/http-testbed.json
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/http-testbed-live.json
     volumes:
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro

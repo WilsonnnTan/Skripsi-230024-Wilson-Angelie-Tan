@@ -3,7 +3,6 @@
 # =============================================================================
 # - Scrapes cAdvisor at 1s resolution so short-lived CPU/memory peaks during
 #   the sustained phase are not averaged away.
-# - Also scrapes Caddy's own admin metrics endpoint.
 # - RECEIVES k6 metrics through the remote-write receiver on /api/v1/write
 #   (enabled by --web.enable-remote-write-receiver in docker-compose.yml).
 #
@@ -22,11 +21,6 @@ scrape_configs:
     scrape_timeout: 1s
     static_configs:
       - targets: ["cadvisor:8080"]
-
-  - job_name: caddy
-    scrape_interval: 2s
-    static_configs:
-      - targets: ["caddy:2019"]
 
   - job_name: prometheus
     scrape_interval: 5s

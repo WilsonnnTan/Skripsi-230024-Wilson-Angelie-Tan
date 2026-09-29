@@ -1,0 +1,170 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "description": "AGGREGATE ANALYSIS view. Set the time picker to the campaign window ($__range). Each bar chart puts scenario on the x-axis with one bar per protocol, aggregated across the repetitions in range (sustained phase only). Authoritative mean±std lives in results/summary_aggregated.csv — Grafana here is for exploration.",
+  "panels": [
+    {
+      "id": 10,
+      "title": "How to read this dashboard",
+      "type": "text",
+      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 0 },
+      "options": {
+        "mode": "markdown",
+        "content": "**Aggregate analysis (sustained phase).** Set the time range to your campaign window. Bars = one value per protocol×scenario aggregated over that range. These are *exploratory* aggregates of the live remote-write stream; the authoritative mean±std for the thesis is `results/summary_aggregated.csv` (and per-phase detail in `results/summary_by_phase.csv`). Server CPU/mem per run is in the CSV (cAdvisor is not tagged by protocol/scenario, so it cannot be broken down here)."
+      }
+    },
+    {
+      "id": 1,
+      "title": "Throughput (req/s) — by scenario, grouped by protocol",
+      "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 4 },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "color": { "mode": "palette-classic" } },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "auto",
+        "xField": "scenario",
+        "showValue": "auto",
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (rate(k6_reqs_total{phase=\"sustained\"}[1m])))[$__range:1m]))",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Latency p95 (ms) — by scenario, grouped by protocol",
+      "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 4 },
+      "fieldConfig": {
+        "defaults": { "unit": "ms", "color": { "mode": "palette-classic" } },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "auto",
+        "xField": "scenario",
+        "showValue": "auto",
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Error rate (%) — by scenario, grouped by protocol",
+      "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 13 },
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "color": { "mode": "palette-classic" } },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "auto",
+        "xField": "scenario",
+        "showValue": "auto",
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "100 * avg by (protocol, scenario) (avg_over_time(k6_req_errors_rate{phase=\"sustained\"}[$__range]))",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Comparison table (sustained, aggregated over range)",
+      "type": "table",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 13 },
+      "fieldConfig": {
+        "defaults": { "custom": { "align": "auto" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "throughput_rps" }, "properties": [ { "id": "unit", "value": "reqps" }, { "id": "decimals", "value": 1 } ] },
+          { "matcher": { "id": "byName", "options": "p50_ms" }, "properties": [ { "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 } ] },
+          { "matcher": { "id": "byName", "options": "p90_ms" }, "properties": [ { "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 } ] },
+          { "matcher": { "id": "byName", "options": "p95_ms" }, "properties": [ { "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 } ] },
+          { "matcher": { "id": "byName", "options": "p99_ms" }, "properties": [ { "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 } ] },
+          { "matcher": { "id": "byName", "options": "error_pct" }, "properties": [ { "id": "unit", "value": "percent" }, { "id": "decimals", "value": 2 } ] }
+        ]
+      },
+      "options": { "showHeader": true },
+      "targets": [
+        { "refId": "THR", "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (rate(k6_reqs_total{phase=\"sustained\"}[1m])))[$__range:1m]))", "format": "table", "instant": true },
+        { "refId": "P50", "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p50{phase=\"sustained\"}[$__range]))", "format": "table", "instant": true },
+        { "refId": "P90", "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p90{phase=\"sustained\"}[$__range]))", "format": "table", "instant": true },
+        { "refId": "P95", "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p95{phase=\"sustained\"}[$__range]))", "format": "table", "instant": true },
+        { "refId": "P99", "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p99{phase=\"sustained\"}[$__range]))", "format": "table", "instant": true },
+        { "refId": "ERR", "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "100 * avg by (protocol, scenario) (avg_over_time(k6_req_errors_rate{phase=\"sustained\"}[$__range]))", "format": "table", "instant": true }
+      ],
+      "transformations": [
+        { "id": "merge", "options": {} },
+        { "id": "organize", "options": {
+          "excludeByName": { "Time": true },
+          "renameByName": {
+            "Value #THR": "throughput_rps",
+            "Value #P50": "p50_ms",
+            "Value #P90": "p90_ms",
+            "Value #P95": "p95_ms",
+            "Value #P99": "p99_ms",
+            "Value #ERR": "error_pct"
+          },
+          "indexByName": {
+            "protocol": 0,
+            "scenario": 1,
+            "Value #THR": 2,
+            "Value #P50": 3,
+            "Value #P90": 4,
+            "Value #P95": 5,
+            "Value #P99": 6,
+            "Value #ERR": 7
+          }
+        } }
+      ]
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": ["http-testbed", "thesis", "analysis"],
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "HTTP Testbed — Aggregate Analysis",
+  "uid": "http-testbed-analysis",
+  "version": 1
+}

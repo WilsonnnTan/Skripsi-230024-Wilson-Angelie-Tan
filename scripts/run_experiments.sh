@@ -6,6 +6,9 @@
 #
 #     3 protocols x 5 network scenarios x 10 repetitions = 150 runs
 #
+# HTTP/1.1 and HTTP/2 use the stock k6 image (service "k6"); HTTP/3 uses the
+# separate xk6-http3 image (service "k6-http3") — run_once picks the right one.
+#
 # For every combination it:
 #   1. applies the network scenario to Caddy (docker-tc, no restart)
 #   2. waits for the qdisc to stabilise
@@ -36,11 +39,18 @@ MAX_ATTEMPTS="${MAX_ATTEMPTS:-2}"     # 1 retry on infrastructure failure
 RESUME="${RESUME:-1}"
 DRY_RUN="${DRY_RUN:-0}"
 
+# All three protocols are exercised. HTTP/1.1 and HTTP/2 run on the stock k6
+# image; HTTP/3 runs on the xk6-http3 image (selected per-protocol in run_once).
 PROTOCOLS=("http1.1" "http2" "http3")
 declare -A PROTO_PORT=( ["http1.1"]="8443" ["http2"]="8444" ["http3"]="8445" )
 SCENARIOS_LIST=(S1 S2 S3 S4 S5)
 
 mkdir -p "${RAW_DIR}" "${LOG_DIR}"
+
+CAMPAIGN_LOG="${LOG_DIR}/campaign.log"
+
+# Print to the terminal AND append to the single campaign log, with a timestamp.
+log() { echo "[$(date -u '+%Y-%m-%dT%H:%M:%SZ')] $*" | tee -a "${CAMPAIGN_LOG}"; }
 
 if [[ ! -f "${INDEX_FILE}" ]]; then
   echo "protocol,scenario,repetition,run_id,start_epoch,end_epoch,sustained_start_epoch,sustained_end_epoch,status,attempts,summary_file" > "${INDEX_FILE}"
@@ -63,13 +73,18 @@ run_once() {
     return 0
   fi
 
+  # HTTP/3 needs the xk6-http3 build; h1/h2 use the stock k6 image. The two k6
+  # services share a cpuset but never run at the same time.
+  local service="k6"
+  [[ "${protocol}" == "http3" ]] && service="k6-http3"
+
   "${COMPOSE[@]}" run --rm --no-deps \
     -e TARGET_URL="${url}" \
     -e PROTOCOL_LABEL="${protocol}" \
     -e SCENARIO="${scenario}" \
     -e REPETITION="${rep}" \
     -e SUMMARY_PATH="/results/raw/${run_id}.json" \
-    k6 run \
+    "${service}" run \
       --out experimental-prometheus-rw \
       --tag run_id="${run_id}" \
       /scripts/script.js
@@ -98,7 +113,13 @@ for protocol in "${PROTOCOLS[@]}"; do
       fi
 
       echo "[${CURRENT}/${TOTAL}] ${protocol} - ${scenario} - rep ${rep}"
-      "${SCRIPT_DIR}/set_network_scenario.sh" "${scenario}" >/dev/null
+
+      if "${SCRIPT_DIR}/set_network_scenario.sh" "${scenario}" >> "${CAMPAIGN_LOG}" 2>&1; then
+        log "    [net] ${scenario} apply: OK"
+      else
+        log "    [net] ${scenario} apply: FAILED (continuing anyway)"
+      fi
+
       sleep "${STABILIZE_SECONDS}"
 
       start_epoch="$(date +%s)"
@@ -134,7 +155,11 @@ for protocol in "${PROTOCOLS[@]}"; do
       # Release the emulated condition and let TCP state drain before the next
       # run so runs do not contaminate each other.
       if (( DRY_RUN == 0 )); then
-        "${SCRIPT_DIR}/reset_network.sh" >/dev/null 2>&1 || true
+        if "${SCRIPT_DIR}/reset_network.sh" >> "${CAMPAIGN_LOG}" 2>&1; then
+          log "    [net] reset: OK"
+        else
+          log "    [net] reset: FAILED (continuing anyway)"
+        fi
       fi
       sleep "${COOLDOWN_SECONDS}"
     done

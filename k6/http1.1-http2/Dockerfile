@@ -1,7 +1,8 @@
-# --- Stage 1: build a custom k6 binary with HTTP/3 (QUIC) support -----------
-# Official k6 has no stable native HTTP/3, so we compile a custom binary with
-# the `xk6-http3` extension via xk6. The k6 core version is PINNED to v1.8.1
-# for thesis reproducibility.
+# --- Stage 1: build a plain k6 binary (HTTP/1.1 + HTTP/2) -------------------
+# This image drives HTTP/1.1 and HTTP/2 only, so it uses a stock k6 with no
+# extensions. The k6 core version is PINNED to v1.8.1 for thesis
+# reproducibility. HTTP/3 is built separately in ../http3 (it requires an older
+# k6 core pinned by the xk6-http3 extension).
 FROM golang:latest AS builder
 
 RUN apt-get update \
@@ -13,10 +14,9 @@ RUN go install go.k6.io/xk6/cmd/xk6@latest
 
 WORKDIR /xk6
 
-# Build k6 v1.8.1 + xk6-http3 (exports the `k6/x/http3` JS module).
-# Syntax: xk6 build [k6-version] --with <module> --output <path>
+# Build a plain k6 v1.8.1 (no extensions).
+# Syntax: xk6 build [k6-version] --output <path>
 RUN xk6 build v1.8.1 \
-      --with github.com/bandorko/xk6-http3@latest \
       --output /xk6/k6
 
 # --- Stage 2: minimal runtime image ----------------------------------------

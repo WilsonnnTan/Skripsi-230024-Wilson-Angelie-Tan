@@ -7,6 +7,7 @@ results/raw/*
 results/logs/*
 results/summary.csv
 results/summary_aggregated.csv
+results/summary_by_phase.csv
 results/run_index.csv
 !results/raw/.gitkeep
 !results/logs/.gitkeep
@@ -27,6 +28,8 @@ Thumbs.db
 
 # --- xk6 build leftovers ----------------------------------------------------
 k6/k6
+k6/http1.1-http2/k6
+k6/http3/k6
 
 # --- Python -----------------------------------------------------------------
 __pycache__/
