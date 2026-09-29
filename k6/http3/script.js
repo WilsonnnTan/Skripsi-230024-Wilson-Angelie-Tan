@@ -150,9 +150,6 @@ export default function (data) {
   // harmless, feeds the JSON summary, and covers the extension's own metrics.)
   const tags = {
     phase: phaseFor(elapsedS),
-    protocol: PROTOCOL,
-    net_scenario: SCENARIO,
-    repetition: String(REPETITION),
   };
 
   let status = 0;
