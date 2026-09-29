@@ -87,6 +87,9 @@ run_once() {
     "${service}" run \
       --out experimental-prometheus-rw \
       --tag run_id="${run_id}" \
+      --tag protocol="${protocol}" \
+      --tag net_scenario="${scenario}" \
+      --tag repetition="${rep}" \
       /scripts/script.js
 }
 
