@@ -1,0 +1,604 @@
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 10623414383938581512"}
+[net] S1 applied and verified
+[2026-09-29T11:33:41Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:35:05Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 10240504320304615723"}
+[net] S1 applied and verified
+[2026-09-29T11:35:13Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:36:38Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 17011077529837119390"}
+[net] S1 applied and verified
+[2026-09-29T11:36:46Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:38:10Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 8693148003817557907"}
+[net] S1 applied and verified
+[2026-09-29T11:38:18Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:39:42Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 14953665940116480271"}
+[net] S1 applied and verified
+[2026-09-29T11:39:50Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:41:14Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 6582313695046605439"}
+[net] S1 applied and verified
+[2026-09-29T11:41:22Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:42:46Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 11532149566333987265"}
+[net] S1 applied and verified
+[2026-09-29T11:42:54Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:44:19Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 479058272683618735"}
+[net] S1 applied and verified
+[2026-09-29T11:44:27Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:45:51Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 10634898463083867861"}
+[net] S1 applied and verified
+[2026-09-29T11:45:59Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:47:24Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 7829271218105414837"}
+[net] S1 applied and verified
+[2026-09-29T11:47:32Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:48:56Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 7865167794742363888"}
+[net] S2 applied and verified
+[2026-09-29T11:49:04Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:50:28Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 4042957402162640133"}
+[net] S2 applied and verified
+[2026-09-29T11:50:36Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:52:00Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 10303970465536111186"}
+[net] S2 applied and verified
+[2026-09-29T11:52:08Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:53:32Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 18260863082266369738"}
+[net] S2 applied and verified
+[2026-09-29T11:53:40Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:55:05Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 7481149799059133793"}
+[net] S2 applied and verified
+[2026-09-29T11:55:13Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:56:37Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 16458093079565671455"}
+[net] S2 applied and verified
+[2026-09-29T11:56:45Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:58:09Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 17911465306220838158"}
+[net] S2 applied and verified
+[2026-09-29T11:58:17Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T11:59:41Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 15860042756890020697"}
+[net] S2 applied and verified
+[2026-09-29T11:59:49Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:01:14Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 1474912904521844625"}
+[net] S2 applied and verified
+[2026-09-29T12:01:22Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:02:46Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 9810986484068686264"}
+[net] S2 applied and verified
+[2026-09-29T12:02:54Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:04:18Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 17736014865982738983"}
+[net] S3 applied and verified
+[2026-09-29T12:04:26Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:05:51Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 1913861217846586137"}
+[net] S3 applied and verified
+[2026-09-29T12:05:59Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:07:23Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 11352123128351997698"}
+[net] S3 applied and verified
+[2026-09-29T12:07:31Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:08:56Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 8531420412435329376"}
+[net] S3 applied and verified
+[2026-09-29T12:09:04Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:10:28Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 4380598471578667011"}
+[net] S3 applied and verified
+[2026-09-29T12:10:36Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:12:00Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 9159634000120781265"}
+[net] S3 applied and verified
+[2026-09-29T12:12:09Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:13:33Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 1082040924747576294"}
+[net] S3 applied and verified
+[2026-09-29T12:13:41Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:15:05Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 12665063139559139473"}
+[net] S3 applied and verified
+[2026-09-29T12:15:13Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:16:37Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 12099248715503555850"}
+[net] S3 applied and verified
+[2026-09-29T12:16:45Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:18:10Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 7781225002799708164"}
+[net] S3 applied and verified
+[2026-09-29T12:18:18Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:19:42Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 3218726003491100841"}
+[net] S4 applied and verified
+[2026-09-29T12:19:50Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:21:14Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 10958290817100032485"}
+[net] S4 applied and verified
+[2026-09-29T12:21:22Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:22:47Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 4138298445664138158"}
+[net] S4 applied and verified
+[2026-09-29T12:22:55Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:24:19Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 2529171176290069396"}
+[net] S4 applied and verified
+[2026-09-29T12:24:27Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:25:51Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 7229048846241869429"}
+[net] S4 applied and verified
+[2026-09-29T12:25:59Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:27:24Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 5990723774062653088"}
+[net] S4 applied and verified
+[2026-09-29T12:27:32Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:28:56Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 16247641897291058430"}
+[net] S4 applied and verified
+[2026-09-29T12:29:04Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:30:28Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 8562688392604048283"}
+[net] S4 applied and verified
+[2026-09-29T12:30:36Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:32:00Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 6320053492120537485"}
+[net] S4 applied and verified
+[2026-09-29T12:32:08Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:33:33Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 15839451611352276322"}
+[net] S4 applied and verified
+[2026-09-29T12:33:41Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:35:05Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 10323345176865284136"}
+[net] S5 applied and verified
+[2026-09-29T12:35:13Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:36:37Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 17766825859358817884"}
+[net] S5 applied and verified
+[2026-09-29T12:36:46Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:38:10Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 2803848046979514424"}
+[net] S5 applied and verified
+[2026-09-29T12:38:18Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:39:42Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 16675402978270729305"}
+[net] S5 applied and verified
+[2026-09-29T12:39:50Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:41:15Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 13267135096035786838"}
+[net] S5 applied and verified
+[2026-09-29T12:41:23Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:42:47Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 3207010290290848622"}
+[net] S5 applied and verified
+[2026-09-29T12:42:55Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:44:20Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 14556043356392909663"}
+[net] S5 applied and verified
+[2026-09-29T12:44:28Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:45:53Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 7980224811520605208"}
+[net] S5 applied and verified
+[2026-09-29T12:46:01Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:47:26Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 5308017504325307649"}
+[net] S5 applied and verified
+[2026-09-29T12:47:34Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:48:59Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 4249241324236039142"}
+[net] S5 applied and verified
+[2026-09-29T12:49:07Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:50:31Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 18228290252623590211"}
+[net] S1 applied and verified
+[2026-09-29T12:50:39Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:52:04Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 1538721138121778838"}
+[net] S1 applied and verified
+[2026-09-29T12:52:12Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:53:36Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 2457386802882782337"}
+[net] S1 applied and verified
+[2026-09-29T12:53:44Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:55:09Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 17316212163570696686"}
+[net] S1 applied and verified
+[2026-09-29T12:55:17Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:56:41Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 15079811736328514039"}
+[net] S1 applied and verified
+[2026-09-29T12:56:49Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:58:13Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 12076976217664803128"}
+[net] S1 applied and verified
+[2026-09-29T12:58:21Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T12:59:46Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 7040342320661857649"}
+[net] S1 applied and verified
+[2026-09-29T12:59:54Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:01:18Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 7131010004504449069"}
+[net] S1 applied and verified
+[2026-09-29T13:01:26Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:02:50Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 11616462229424473502"}
+[net] S1 applied and verified
+[2026-09-29T13:02:58Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:04:23Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 3543147978305768622"}
+[net] S1 applied and verified
+[2026-09-29T13:04:31Z]     [net] S1 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:05:55Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 15262029423005718722"}
+[net] S2 applied and verified
+[2026-09-29T13:06:03Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:07:28Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 10985392364412808402"}
+[net] S2 applied and verified
+[2026-09-29T13:07:36Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:09:00Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 3626905832793394367"}
+[net] S2 applied and verified
+[2026-09-29T13:09:09Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:10:33Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 18151386410070123008"}
+[net] S2 applied and verified
+[2026-09-29T13:10:41Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:12:06Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 5911497167029828953"}
+[net] S2 applied and verified
+[2026-09-29T13:12:14Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:13:38Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 11973396981619015889"}
+[net] S2 applied and verified
+[2026-09-29T13:13:46Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:15:11Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 1001263060993247770"}
+[net] S2 applied and verified
+[2026-09-29T13:15:19Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:16:43Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 5675055336482131722"}
+[net] S2 applied and verified
+[2026-09-29T13:16:51Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:18:15Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 14256353599140339928"}
+[net] S2 applied and verified
+[2026-09-29T13:18:23Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:19:48Z]     [net] reset: OK
+[net] applying S2 (Stable 4G) -> rate=20mbit&delay=40ms&jitter=5ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "20mbit", "delay": "40ms", "jitter": "5ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 40ms  5ms rate 20Mbit seed 6558442588856674344"}
+[net] S2 applied and verified
+[2026-09-29T13:19:56Z]     [net] S2 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:21:20Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 1202140442665975778"}
+[net] S3 applied and verified
+[2026-09-29T13:21:29Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:22:53Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 10085673534608820409"}
+[net] S3 applied and verified
+[2026-09-29T13:23:01Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:24:25Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 2327187916611188126"}
+[net] S3 applied and verified
+[2026-09-29T13:24:33Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:25:58Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 6562436824034871956"}
+[net] S3 applied and verified
+[2026-09-29T13:26:06Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:27:30Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 15164466942530341646"}
+[net] S3 applied and verified
+[2026-09-29T13:27:38Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:29:03Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 391968186592908474"}
+[net] S3 applied and verified
+[2026-09-29T13:29:11Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:30:36Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 14070183927837264638"}
+[net] S3 applied and verified
+[2026-09-29T13:30:44Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:32:08Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 13082134849684330247"}
+[net] S3 applied and verified
+[2026-09-29T13:32:16Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:33:41Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 12364412866788750209"}
+[net] S3 applied and verified
+[2026-09-29T13:33:49Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:35:13Z]     [net] reset: OK
+[net] applying S3 (Congested 4G) -> rate=10mbit&delay=100ms&jitter=15ms&loss=2.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "100ms", "jitter": "15ms", "loss": "2.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 100ms  15ms loss 2.5% rate 10Mbit seed 8978063356436178295"}
+[net] S3 applied and verified
+[2026-09-29T13:35:21Z]     [net] S3 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:36:46Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 2991553441995039546"}
+[net] S4 applied and verified
+[2026-09-29T13:36:54Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:38:18Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 7196655671942618422"}
+[net] S4 applied and verified
+[2026-09-29T13:38:26Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:39:51Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 4526372062224204838"}
+[net] S4 applied and verified
+[2026-09-29T13:39:59Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:41:23Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 9691058965266430431"}
+[net] S4 applied and verified
+[2026-09-29T13:41:32Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:42:56Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 4452826650188257056"}
+[net] S4 applied and verified
+[2026-09-29T13:43:04Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:44:28Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 10731859060374378721"}
+[net] S4 applied and verified
+[2026-09-29T13:44:37Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:46:01Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 2782169637587221226"}
+[net] S4 applied and verified
+[2026-09-29T13:46:09Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:47:34Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 4591856755700799840"}
+[net] S4 applied and verified
+[2026-09-29T13:47:42Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:49:06Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 9239950982017296310"}
+[net] S4 applied and verified
+[2026-09-29T13:49:14Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:50:39Z]     [net] reset: OK
+[net] applying S4 (Slow 4G / Fast 3G) -> rate=1600kbit&delay=150ms&jitter=10ms&loss=0.5%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "1600kbit", "delay": "150ms", "jitter": "10ms", "loss": "0.5%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 150ms  10ms loss 0.5% rate 1600Kbit seed 16550014355042470946"}
+[net] S4 applied and verified
+[2026-09-29T13:50:47Z]     [net] S4 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:52:11Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 1754404003216284081"}
+[net] S5 applied and verified
+[2026-09-29T13:52:20Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:53:44Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 931458390643979494"}
+[net] S5 applied and verified
+[2026-09-29T13:53:52Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:55:17Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 5300208953677828494"}
+[net] S5 applied and verified
+[2026-09-29T13:55:25Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:56:49Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 15664898050881039956"}
+[net] S5 applied and verified
+[2026-09-29T13:56:57Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:58:22Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 13955525134283470320"}
+[net] S5 applied and verified
+[2026-09-29T13:58:30Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T13:59:54Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 12101793990350333041"}
+[net] S5 applied and verified
+[2026-09-29T14:00:02Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T14:01:27Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 8169662059156752677"}
+[net] S5 applied and verified
+[2026-09-29T14:01:35Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T14:02:59Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 7242745434146179467"}
+[net] S5 applied and verified
+[2026-09-29T14:03:07Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T14:04:32Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 7762052229193899828"}
+[net] S5 applied and verified
+[2026-09-29T14:04:40Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T14:06:04Z]     [net] reset: OK
+[net] applying S5 (Long Distance (High Latency)) -> rate=10mbit&delay=275ms&jitter=20ms&loss=1%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "10mbit", "delay": "275ms", "jitter": "20ms", "loss": "1%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 275ms  20ms loss 1% rate 10Mbit seed 17124700873747996155"}
+[net] S5 applied and verified
+[2026-09-29T14:06:12Z]     [net] S5 apply: OK
+[net] reset -> {"container": "caddy", "interface": "eth1", "cleared": true, "qdisc": "qdisc noqueue 0: root refcnt 2"}
+[2026-09-29T14:07:37Z]     [net] reset: OK
+[net] applying S1 (Baseline (Ideal)) -> rate=100mbit&delay=2ms&jitter=0ms&loss=0%
+[net] docker-tc: {"container": "caddy", "interface": "eth1", "applied": {"rate": "100mbit", "delay": "2ms", "jitter": "0ms", "loss": "0%"}, "qdisc": "qdisc netem 1: root refcnt 17 limit 1000 delay 2ms rate 100Mbit seed 17395025285235517451"}
+[net] S1 applied and verified
+[2026-09-29T14:07:45Z]     [net] S1 apply: OK
