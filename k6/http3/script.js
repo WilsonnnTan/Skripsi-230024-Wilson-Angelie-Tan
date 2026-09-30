@@ -1,29 +1,22 @@
 // =============================================================================
-// k6 load-test script — HTTP/3 (thesis testbed).
+// k6 load-test script — HTTP/3 (xk6-http3, k6 v0.48.0), N CONCURRENT requests
+// per VU.
 // =============================================================================
-// This variant drives HTTP/3 (QUIC) only, via the xk6-http3 extension's
-// `k6/x/http3` client. It runs on a custom k6 build pinned to v0.48.0 (see
-// ../http3/Dockerfile) because xk6-http3 v0.2.0 requires that k6 core. The
-// h1/h2 variant lives in ../http1.1-http2 on a newer k6.
+// k6 JS is single-threaded per VU, so true concurrency needs an async or batch
+// API from the extension. issueConcurrent() below is the ONLY place that
+// touches the extension and tries, in order:
+//   1. http3.batch(urls)            -> array of responses   (wall time of the
+//                                      whole batch is recorded per request)
+//   2. http3.asyncRequest('GET', u) -> Promise + Promise.all (per-request
+//                                      wall time)
+// If neither exists it throws at the first iteration with a clear message
+// instead of silently falling back to sequential requests (which would break
+// the "10 concurrent" design). I could not verify the xk6-http3 v0.2.0 API,
+// so check the extension source / `console.log(Object.keys(http3))` and adjust
+// issueConcurrent() if the names or signatures differ.
 //
-// Parameterised through environment variables (see run_experiments.sh):
-//   TARGET_URL       e.g. https://caddy:8445/api/data  (the h3/QUIC listener)
-//   PROTOCOL_LABEL   "http3"
-//   SCENARIO         "S1".."S5"  (also becomes the k6 scenario name -> tag)
-//   REPETITION       "1".."10"
-//   SUMMARY_PATH     where handleSummary() writes the per-run JSON
-//
-// The xk6-http3 response EMBEDS k6's standard httpext.Response, so resp.status,
-// resp.body and resp.proto are the SAME fields as the built-in client. The one
-// exception is resp.timings: the extension does NOT populate it, so latency is
-// measured with a wall-clock timer around http3.get() (see the VU loop). All
-// custom metrics (reqs, req_errors, req_duration_ms, resp_bytes) therefore end
-// up with the IDENTICAL label structure to h1/h2 — protocol / net_scenario /
-// repetition / scenario / phase — so both feed the same Grafana panels and the
-// same export path.
-// NOTE: http3.get() takes the URL only (no per-request options object), so the
-// `phase` tag is attached to our CUSTOM metrics manually below — which is what
-// the per-phase sub-metrics and the export depend on anyway.
+// Env vars: TARGET_URL, PROTOCOL_LABEL, SCENARIO, REPETITION, SUMMARY_PATH,
+// and optionally CONCURRENCY (default 10).
 // =============================================================================
 
 import http3 from 'k6/x/http3';
@@ -37,6 +30,7 @@ const PROTOCOL = (__ENV.PROTOCOL_LABEL || 'http3').toLowerCase();
 const SCENARIO = __ENV.SCENARIO || 'S0';
 const REPETITION = __ENV.REPETITION || '0';
 const SUMMARY_PATH = __ENV.SUMMARY_PATH || '/results/raw/summary.json';
+const CONCURRENCY = parseInt(__ENV.CONCURRENCY || '3', 10);
 
 if (!TARGET_URL) {
   throw new Error('TARGET_URL environment variable is required');
@@ -47,46 +41,35 @@ const WARMUP_S = 10;
 const SUSTAINED_S = 60;
 const SUSTAINED_END_S = WARMUP_S + SUSTAINED_S; // 70 s
 
-// Expected token in resp.proto ("HTTP/3.0"), used only to sanity-check that
-// the h3 client actually negotiated HTTP/3.
 const PROTO_TOKEN = '3';
 
-// ---- Custom metrics (identical shape to the h1/h2 variant) ----------------
-// Tagged with `phase` so the live dashboard can show every phase, while the
-// thresholds below and the export isolate each phase (sustained is headline).
-const reqDurationMs = new Trend('req_duration_ms', true); // native resp timing
+// ---- Custom metrics -------------------------------------------------------
+const reqDurationMs = new Trend('req_duration_ms', true);
 const reqs = new Counter('reqs');
 const reqErrors = new Rate('req_errors');
 const respBytes = new Counter('resp_bytes');
-// Protocol-negotiation sanity: inspect it to confirm h3 was negotiated.
 const protoMismatch = new Counter('proto_mismatch');
 
 // ---- k6 options -----------------------------------------------------------
 export const options = {
   scenarios: {
-    // Naming the scenario "S1".."S5" makes k6's reserved `scenario` tag equal
-    // to the network scenario automatically.
     [SCENARIO]: {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
-        { duration: `${WARMUP_S}s`, target: 20 },   // warm-up
-        { duration: `${SUSTAINED_S}s`, target: 20 }, // sustained
-        { duration: `${WARMUP_S}s`, target: 0 },     // cool-down
+        { duration: `${WARMUP_S}s`, target: 20 },
+        { duration: `${SUSTAINED_S}s`, target: 20 },
+        { duration: `${WARMUP_S}s`, target: 0 },
       ],
       gracefulRampDown: '2s',
     },
   },
-  // Test-wide tags on EVERY metric. `scenario` is filled by k6 from the name.
   tags: {
     protocol: PROTOCOL,
     net_scenario: SCENARIO,
     repetition: String(REPETITION),
+    concurrency: String(CONCURRENCY),
   },
-  // Trivially-true thresholds ONLY exist to make k6 emit EXACT per-phase
-  // sub-metrics (e.g. "req_duration_ms{phase:sustained}") into handleSummary(),
-  // giving true whole-window percentiles per phase. All three phases are kept
-  // so warmup / sustained / cooldown can each be reported and exported.
   thresholds: {
     'req_duration_ms{phase:warmup}': ['p(99)>=0'],
     'req_duration_ms{phase:sustained}': ['p(99)>=0'],
@@ -98,24 +81,16 @@ export const options = {
     'req_errors{phase:sustained}': ['rate>=0'],
     'req_errors{phase:cooldown}': ['rate>=0'],
   },
-  // Closed testbed: Caddy uses its internal CA (applies to the h3 client too).
   insecureSkipTLSVerify: true,
-  // Multiplexing / connection reuse is part of what we measure.
   noConnectionReuse: false,
-  // Body length is validated, so bodies must not be discarded.
   discardResponseBodies: false,
-  // p(50) == med, so `med` is dropped to avoid a duplicate column.
   summaryTrendStats: ['avg', 'min', 'max', 'p(50)', 'p(90)', 'p(95)', 'p(99)', 'count'],
 };
 
-// ---- setup: capture wall-clock start for phase bucketing ------------------
 export function setup() {
   return { testStart: Date.now() };
 }
 
-// Resolve the scenario start time (shared by all VUs); fall back to setup().
-// Millisecond resolution is fine here: it only decides the 10 s phase buckets,
-// NOT the latency measurement (which uses resp.timings.duration below).
 function resolveStart(data) {
   try {
     const st = exec.scenario && exec.scenario.startTime;
@@ -135,84 +110,88 @@ function phaseFor(elapsedS) {
   return 'cooldown';
 }
 
-// ---- main VU loop ---------------------------------------------------------
-export default function (data) {
-  const elapsedS = (Date.now() - resolveStart(data)) / 1000;
-  // Identifying tags on EVERY custom-metric sample. `phase` is per-iteration;
-  // protocol / net_scenario / repetition are ALSO set here explicitly rather
-  // than relying on options.tags (root tags). On k6 v0.48 the root tags set via
-  // options.tags do NOT reliably reach the remote-write series for these custom
-  // metrics (only the reserved `scenario` and per-.add() tags do), so the h3
-  // series would otherwise be missing `protocol`/`repetition` and drop out of
-  // the `by (protocol, scenario)` dashboard queries. Setting them here — the
-  // same path `phase` already uses — guarantees the h3 label structure is
-  // IDENTICAL to the h1/h2 variant. (options.tags is still kept below: it is
-  // harmless, feeds the JSON summary, and covers the extension's own metrics.)
-  const tags = {
-    phase: phaseFor(elapsedS),
-  };
-
-  let status = 0;
-  let bodyLen = 0;
-  let durationMs = 0;
-  let proto = '';
-  let ok = false;
-
-  const t0 = Date.now();
-  try {
-    // xk6-http3 client: takes the URL only. The response is a k6
-    // httpext.Response, so status/body/proto below read identically to the
-    // built-in client. HOWEVER the extension does NOT populate resp.timings
-    // (client.go builds the response without a request Trail), so we cannot
-    // read k6's internal request duration here. Measure the wall-clock time
-    // around the synchronous http3.get() instead — this is the client-observed
-    // latency and produces the SAME `req_duration_ms{phase,...}` series (same
-    // label structure) as the h1/h2 variant. ms resolution is adequate because
-    // every scenario adds emulated network delay. Per-request tags cannot be
-    // passed here, so `phase` is applied to the custom metrics manually below.
-    const resp = http3.get(TARGET_URL);
-    const wallMs = Date.now() - t0;
-
-    status = typeof resp.status === 'number' ? resp.status : 0;
-    bodyLen = resp.body ? resp.body.length : 0;
-    proto = resp.proto || '';
-    // Prefer k6's own timing if a future extension version ever provides it;
-    // otherwise fall back to the wall-clock measurement above.
-    if (resp.timings && typeof resp.timings.duration === 'number' && resp.timings.duration > 0) {
-      durationMs = resp.timings.duration;
-    } else {
-      durationMs = wallMs;
+// ---- The only extension-specific code: issue CONCURRENCY requests at once.
+// Returns an array of { resp, wallMs, error } of length CONCURRENCY.
+async function issueConcurrent() {
+  if (typeof http3.batch === 'function') {
+    const t0 = Date.now();
+    const urls = [];
+    for (let i = 0; i < CONCURRENCY; i++) urls.push(TARGET_URL);
+    let resps;
+    try {
+      resps = await http3.batch(urls);
+    } catch (e) {
+      return urls.map(() => ({ resp: null, wallMs: 0, error: e }));
     }
-    ok = status >= 200 && status < 400 && bodyLen > 0;
+    const wallMs = Date.now() - t0; // whole-batch time (no per-request timing)
+    return resps.map((r) => ({ resp: r, wallMs: wallMs, error: null }));
+  }
+
+  if (typeof http3.asyncRequest === 'function') {
+    const jobs = [];
+    for (let i = 0; i < CONCURRENCY; i++) {
+      const t0 = Date.now();
+      jobs.push(
+        http3.asyncRequest('GET', TARGET_URL).then(
+          (r) => ({ resp: r, wallMs: Date.now() - t0, error: null }),
+          (e) => ({ resp: null, wallMs: 0, error: e })
+        )
+      );
+    }
+    return Promise.all(jobs);
+  }
+
+  throw new Error(
+    'xk6-http3 exposes neither batch() nor asyncRequest(); cannot run concurrent '
+    + 'requests per VU. Available: ' + Object.keys(http3).join(', ')
+  );
+}
+
+function record(tags, ok, durationMs, bodyLen, proto) {
+  if (PROTO_TOKEN && proto.indexOf(PROTO_TOKEN) === -1) {
+    protoMismatch.add(1, tags);
+  }
+  reqs.add(1, tags);
+  reqErrors.add(ok ? 0 : 1, tags);
+  if (durationMs > 0) reqDurationMs.add(durationMs, tags);
+  if (bodyLen > 0) respBytes.add(bodyLen, tags);
+}
+
+// ---- main VU loop ---------------------------------------------------------
+export default async function (data) {
+  const elapsedS = (Date.now() - resolveStart(data)) / 1000;
+  // Explicit tags on every custom-metric sample (see note in the original
+  // script about options.tags not reaching remote-write on k6 v0.48).
+  const tags = { phase: phaseFor(elapsedS) };
+
+  const results = await issueConcurrent();
+
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    if (r.error || !r.resp) {
+      record(tags, false, 0, 0, '');
+      continue;
+    }
+    const resp = r.resp;
+    const status = typeof resp.status === 'number' ? resp.status : 0;
+    const bodyLen = resp.body ? resp.body.length : 0;
+    const proto = resp.proto || '';
+    const durationMs =
+      resp.timings && typeof resp.timings.duration === 'number' && resp.timings.duration > 0
+        ? resp.timings.duration
+        : r.wallMs;
+    const ok = status >= 200 && status < 400 && bodyLen > 0;
 
     check(resp, {
       'status is 2xx/3xx': () => ok,
       'body is non-empty': () => bodyLen > 0,
     });
-  } catch (e) {
-    // Network-level failure (timeout, reset, refused): an error, and no timing
-    // is recorded for a request that never completed.
-    ok = false;
-    status = 0;
-  }
 
-  // Protocol-negotiation sanity check — does NOT affect the error rate.
-  if (PROTO_TOKEN && proto.indexOf(PROTO_TOKEN) === -1) {
-    protoMismatch.add(1, tags);
-  }
-
-  reqs.add(1, tags);
-  reqErrors.add(ok ? 0 : 1, tags);
-  if (durationMs > 0) {
-    reqDurationMs.add(durationMs, tags);
-  }
-  if (bodyLen > 0) {
-    respBytes.add(bodyLen, tags);
+    record(tags, ok, durationMs, bodyLen, proto);
   }
 }
 
-// ---- per-run summary: exact per-phase numbers written to JSON -------------
-// Same format as the h1/h2 variant so export_results.sh reads both identically.
+// ---- per-run summary ------------------------------------------------------
 function statOf(data, metric, stat) {
   const m = data.metrics[metric];
   if (m && m.values && typeof m.values[stat] === 'number') return m.values[stat];
@@ -226,7 +205,7 @@ export function handleSummary(data) {
   const errRate = statOf(data, 'req_errors{phase:sustained}', 'rate') * 100;
   const mism = statOf(data, 'proto_mismatch', 'count');
 
-  const line = `[k6] ${PROTOCOL}/${SCENARIO}/rep${REPETITION} sustained: `
+  const line = `[k6] ${PROTOCOL}/${SCENARIO}/rep${REPETITION} c=${CONCURRENCY} sustained: `
     + `rps=${isNaN(rps) ? 'NaN' : rps.toFixed(1)} `
     + `p95=${isNaN(p95) ? 'NaN' : p95.toFixed(2)}ms `
     + `err=${isNaN(errRate) ? 'NaN' : errRate.toFixed(2)}% `
