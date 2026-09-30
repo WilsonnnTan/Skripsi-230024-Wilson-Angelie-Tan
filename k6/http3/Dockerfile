@@ -53,6 +53,10 @@ RUN git clone --depth 1 --branch v0.2.0 \
  && sed -i 's|Metric: mh.vu.State().BuiltinMetrics.DataSent,|Metric: mh.vu.State().BuiltinMetrics.DataSent,\n\t\t\tTags:   mh.vu.State().Tags.GetCurrentValues().Tags,|' \
       /xk6/xk6-http3-src/stats.go
 
+RUN sed -i '61s|.*|\tgo func() {\n\t\tdefer func() { _ = recover() }()|' /xk6/xk6-http3-src/http3.go \
+ && sed -n 58,70p /xk6/xk6-http3-src/http3.go \
+ && grep -c "recover()" /xk6/xk6-http3-src/http3.go
+
 # Build k6 v0.48.0 with the PATCHED HTTP/3 extension. The `@v0.2.0=<path>`
 # form tells xk6 to use the local (patched) copy in place of the published
 # module. Syntax: xk6 build [k6-version] --with <module>@<version>[=<path>].

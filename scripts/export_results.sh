@@ -11,17 +11,27 @@
 #       sustained phase (via the "{phase:sustained}" sub-metrics), so no
 #       averaging-of-percentiles from Prometheus is involved.
 #   * SERVER metrics (Caddy / backend CPU %, memory MB) come from cAdvisor via
-#       Prometheus, averaged over the exact sustained window recorded in
-#       results/run_index.csv (columns sustained_start_epoch/sustained_end_epoch).
+#       Prometheus. cAdvisor series carry no protocol/scenario/repetition
+#       labels, so they are aligned to each run purely by TIME: we average
+#       them over the exact window recorded in results/run_index.csv
+#       (columns sustained_start_epoch / sustained_end_epoch).
 #
 # Prometheus/Grafana remain the LIVE dashboard; this export does not depend on
 # k6 remote-write, so a remote-write hiccup never corrupts the thesis CSV.
 #
 # Outputs:
 #   results/summary.csv             one row per run, sustained phase (150 rows)
+#                                   client + server metrics
 #   results/summary_aggregated.csv  mean +/- std across the 10 repetitions
 #   results/summary_by_phase.csv    one row per run x phase (warmup/sustained/
-#                                   cooldown) — client metrics only
+#                                   cooldown) — client AND server metrics
+#
+# Tunables (env vars):
+#   PROM_URL            Prometheus base URL (default http://localhost:9090)
+#   CPU_RATE_WINDOW     rate() window for the sustained-phase CPU (default 5s;
+#                       cAdvisor scrapes at 1 s, so 5s stays inside the window)
+#   PHASE_RATE_WINDOW   rate() window for per-phase CPU (default 5s)
+#   QUERY_STEP          sub-query resolution (default 5s)
 # =============================================================================
 set -euo pipefail
 
@@ -33,9 +43,11 @@ SUMMARY_CSV="${RESULTS_DIR}/summary.csv"
 AGG_CSV="${RESULTS_DIR}/summary_aggregated.csv"
 PHASE_CSV="${RESULTS_DIR}/summary_by_phase.csv"
 PROM_URL="${PROM_URL:-http://localhost:9090}"
-# cAdvisor scrapes at 1 s; a 30 s rate window is stable without reaching far
-# outside the sustained window. Sub-query resolution for the CPU average.
-CPU_RATE_WINDOW="${CPU_RATE_WINDOW:-30s}"
+# cAdvisor scrapes at 1 s. A short rate window keeps the CPU average inside the
+# recorded window instead of reaching back into the previous phase / idle time.
+CPU_RATE_WINDOW="${CPU_RATE_WINDOW:-5s}"
+# Short rate window for the 10 s warmup/cooldown phases.
+PHASE_RATE_WINDOW="${PHASE_RATE_WINDOW:-5s}"
 QUERY_STEP="${QUERY_STEP:-5s}"
 
 command -v jq  >/dev/null 2>&1 || { echo "jq is required (apt install jq)"  >&2; exit 1; }
@@ -63,18 +75,48 @@ json_stat() {
 divide() { awk -v a="$1" -v b="$2" 'BEGIN{ if(a=="NaN"||b=="NaN"||b+0==0){print "NaN"} else printf "%.4f", a/b }'; }
 mul()    { awk -v a="$1" -v b="$2" 'BEGIN{ if(a=="NaN"||b=="NaN"){print "NaN"} else printf "%.4f", a*b }'; }
 
+# --- Server metrics averaged over a window -----------------------------------
+# server_avg <end_epoch> <window_seconds> <rate_window>
+#   -> "cpu_caddy,mem_caddy,cpu_backend,mem_backend"
+# NOTE: we match on the Docker Compose *service* label, not the cAdvisor
+# `name=` label. On Docker Desktop / WSL2 with the containerd snapshotter the
+# `name=` label is frequently empty (yielding NaN CPU/mem); the compose label
+# `container_label_com_docker_compose_service` is always populated.
+server_avg() {
+  local at="$1" win="$2" rw="$3" out="" svc c m
+  for svc in caddy backend; do
+    c="$(promq "avg_over_time((sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"${svc}\"}[${rw}])) * 100)[${win}s:${QUERY_STEP}])" "${at}")"
+    m="$(promq "avg_over_time(sum(container_memory_working_set_bytes{container_label_com_docker_compose_service=\"${svc}\"})[${win}s:${QUERY_STEP}]) / 1048576" "${at}")"
+    [[ -n "${c}" ]] || c="NaN"
+    [[ -n "${m}" ]] || m="NaN"
+    out+="${c},${m},"
+  done
+  echo "${out%,}"
+}
+
 echo "protocol,scenario,repetition,throughput_rps,latency_p50,latency_p90,latency_p95,latency_p99,error_rate_pct,cpu_caddy_pct,mem_caddy_mb,cpu_backend_pct,mem_backend_mb" > "${SUMMARY_CSV}"
-echo "protocol,scenario,repetition,phase,throughput_rps,latency_p50,latency_p90,latency_p95,latency_p99,error_rate_pct" > "${PHASE_CSV}"
+echo "protocol,scenario,repetition,phase,throughput_rps,latency_p50,latency_p90,latency_p95,latency_p99,error_rate_pct,cpu_caddy_pct,mem_caddy_mb,cpu_backend_pct,mem_backend_mb" > "${PHASE_CSV}"
 
 # Phase durations (seconds) — MUST match the k6 stages (warmup/sustained/cooldown).
 declare -A PHASE_SECONDS=( ["warmup"]="10" ["sustained"]="60" ["cooldown"]="10" )
 
-# Write one row per phase (client metrics only) to PHASE_CSV for a given run.
+# Write one row per phase (client + server metrics) to PHASE_CSV for a run.
+# Phase windows are derived from the sustained window recorded in run_index.csv:
+#   warmup    = [sus_start-10, sus_start]
+#   sustained = [sus_start,    sus_end]
+#   cooldown  = [sus_end,      sus_end+10]
 write_phase_rows() {
-  local summary="$1" protocol="$2" scenario="$3" repetition="$4"
-  local phase dur pp50 pp90 pp95 pp99 pcount pthr perr_rate perr
+  local summary="$1" protocol="$2" scenario="$3" repetition="$4" sus_start="$5" sus_end="$6"
+  local phase dur pp50 pp90 pp95 pp99 pcount pthr perr_rate perr srv at win
   for phase in warmup sustained cooldown; do
     dur="${PHASE_SECONDS[$phase]}"
+    case "${phase}" in
+      warmup)    at="${sus_start}";       win=10 ;;
+      sustained) at="${sus_end}";         win=$(( sus_end - sus_start )) ;;
+      cooldown)  at=$(( sus_end + 10 ));  win=10 ;;
+    esac
+    (( win > 0 )) || win="${dur}"
+
     pp50="$(json_stat "${summary}" "req_duration_ms{phase:${phase}}" "p(50)")"
     pp90="$(json_stat "${summary}" "req_duration_ms{phase:${phase}}" "p(90)")"
     pp95="$(json_stat "${summary}" "req_duration_ms{phase:${phase}}" "p(95)")"
@@ -83,10 +125,12 @@ write_phase_rows() {
     pthr="$(divide "${pcount}" "${dur}")"
     perr_rate="$(json_stat "${summary}" "req_errors{phase:${phase}}" "rate")"
     perr="$(mul "${perr_rate}" 100)"
+    srv="$(server_avg "${at}" "${win}" "${PHASE_RATE_WINDOW}")"
+
     for v in pthr pp50 pp90 pp95 pp99 perr; do
       [[ -n "${!v}" ]] || printf -v "${v}" '%s' "NaN"
     done
-    echo "${protocol},${scenario},${repetition},${phase},${pthr},${pp50},${pp90},${pp95},${pp99},${perr}" >> "${PHASE_CSV}"
+    echo "${protocol},${scenario},${repetition},${phase},${pthr},${pp50},${pp90},${pp95},${pp99},${perr},${srv}" >> "${PHASE_CSV}"
   done
 }
 
@@ -114,17 +158,11 @@ while IFS=',' read -r protocol scenario repetition run_id start_epoch end_epoch 
   err="$(mul "${err_rate}" 100)"
 
   # ---- server metrics: cAdvisor, averaged over the recorded sustained window
-  # NOTE: we match on the Docker Compose *service* label, not the cAdvisor
-  # `name=` label. On Docker Desktop / WSL2 with the containerd snapshotter the
-  # `name=` label is frequently empty (yielding NaN CPU/mem); the compose label
-  # `container_label_com_docker_compose_service` is always populated.
   window=$(( sus_end - sus_start ))
   (( window > 0 )) || window=60
 
-  cpu_caddy="$(promq "avg_over_time((sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"caddy\"}[${CPU_RATE_WINDOW}])) * 100)[${window}s:${QUERY_STEP}])" "${sus_end}")"
-  mem_caddy="$(promq "avg_over_time(sum(container_memory_working_set_bytes{container_label_com_docker_compose_service=\"caddy\"})[${window}s:${QUERY_STEP}]) / 1048576" "${sus_end}")"
-  cpu_backend="$(promq "avg_over_time((sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"backend\"}[${CPU_RATE_WINDOW}])) * 100)[${window}s:${QUERY_STEP}])" "${sus_end}")"
-  mem_backend="$(promq "avg_over_time(sum(container_memory_working_set_bytes{container_label_com_docker_compose_service=\"backend\"})[${window}s:${QUERY_STEP}]) / 1048576" "${sus_end}")"
+  IFS=',' read -r cpu_caddy mem_caddy cpu_backend mem_backend \
+    <<< "$(server_avg "${sus_end}" "${window}" "${CPU_RATE_WINDOW}")"
 
   # Normalise empty values to NaN.
   for v in throughput p50 p90 p95 p99 err cpu_caddy mem_caddy cpu_backend mem_backend; do
@@ -133,11 +171,11 @@ while IFS=',' read -r protocol scenario repetition run_id start_epoch end_epoch 
 
   echo "${protocol},${scenario},${repetition},${throughput},${p50},${p90},${p95},${p99},${err},${cpu_caddy},${mem_caddy},${cpu_backend},${mem_backend}" >> "${SUMMARY_CSV}"
 
-  # Per-phase client metrics (warmup / sustained / cooldown).
-  write_phase_rows "${local_summary}" "${protocol}" "${scenario}" "${repetition}"
+  # Per-phase metrics (warmup / sustained / cooldown), client + server.
+  write_phase_rows "${local_summary}" "${protocol}" "${scenario}" "${repetition}" "${sus_start}" "${sus_end}"
 
   ROWS=$((ROWS + 1))
-  echo "[export] ${protocol}/${scenario}/rep${repetition} -> rps=${throughput} p95=${p95} err=${err}%"
+  echo "[export] ${protocol}/${scenario}/rep${repetition} -> rps=${throughput} p95=${p95} err=${err}% cpu_caddy=${cpu_caddy}% cpu_backend=${cpu_backend}%"
 done < "${INDEX_FILE}"
 
 echo "[export] wrote ${ROWS} rows to ${SUMMARY_CSV}"

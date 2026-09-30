@@ -156,6 +156,58 @@
           }
         } }
       ]
+    },
+    {
+      "id": 5, "title": "Caddy CPU (%) — sustained, by scenario × protocol", "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 22 },
+      "fieldConfig": { "defaults": { "unit": "percent", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "options": { "orientation": "auto", "xField": "scenario", "showValue": "auto", "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "prometheus" }, "format": "table", "instant": true,
+        "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"caddy\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))" } ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
+    },
+    {
+      "id": 6, "title": "Caddy memory (MB) — sustained, by scenario × protocol", "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 22 },
+      "fieldConfig": { "defaults": { "unit": "decmbytes", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "options": { "orientation": "auto", "xField": "scenario", "showValue": "auto", "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "prometheus" }, "format": "table", "instant": true,
+        "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"caddy\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))" } ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
+    },
+    {
+      "id": 7, "title": "Backend CPU (%) — sustained, by scenario × protocol", "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 31 },
+      "fieldConfig": { "defaults": { "unit": "percent", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "options": { "orientation": "auto", "xField": "scenario", "showValue": "auto", "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "prometheus" }, "format": "table", "instant": true,
+        "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"backend\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))" } ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
+    },
+    {
+      "id": 8, "title": "Backend memory (MB) — sustained, by scenario × protocol", "type": "barchart",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 31 },
+      "fieldConfig": { "defaults": { "unit": "decmbytes", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "options": { "orientation": "auto", "xField": "scenario", "showValue": "auto", "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "prometheus" }, "format": "table", "instant": true,
+        "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"backend\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))" } ],
+      "transformations": [
+        { "id": "labelsToFields", "options": {} },
+        { "id": "groupingToMatrix", "options": { "columnField": "protocol", "rowField": "scenario", "valueField": "Value" } }
+      ]
     }
   ],
   "refresh": "",

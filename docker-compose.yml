@@ -262,6 +262,7 @@ services:
       # Required to accept k6's `experimental-prometheus-rw` output.
       - --web.enable-remote-write-receiver
       - --query.lookback-delta=5m
+      - --web.enable-admin-api
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
