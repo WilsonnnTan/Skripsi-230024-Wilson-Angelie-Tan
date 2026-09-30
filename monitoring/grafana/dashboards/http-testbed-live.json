@@ -92,6 +92,18 @@
       },
       "targets": [
         {
+          "refId": "P50",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(k6_req_duration_ms_p50{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "legendFormat": "p50 {{protocol}} {{scenario}} r{{repetition}}"
+        },
+        {
+          "refId": "P90",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "avg(k6_req_duration_ms_p90{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "legendFormat": "p90 {{protocol}} {{scenario}} r{{repetition}}"
+        },
+        {
           "refId": "P95",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "avg(k6_req_duration_ms_p95{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
