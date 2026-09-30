@@ -44,7 +44,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -103,7 +107,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -162,7 +170,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -221,7 +233,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -280,7 +296,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -339,7 +359,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -615,7 +639,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -644,11 +672,33 @@
           "options": {}
         },
         {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario"
+              }
+            ]
+          }
+        },
+        {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "protocol",
             "rowField": "scenario",
             "valueField": "Value"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario\\protocol"
+              }
+            ]
           }
         }
       ]
@@ -674,7 +724,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -703,11 +757,33 @@
           "options": {}
         },
         {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario"
+              }
+            ]
+          }
+        },
+        {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "protocol",
             "rowField": "scenario",
             "valueField": "Value"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario\\protocol"
+              }
+            ]
           }
         }
       ]
@@ -733,7 +809,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -762,11 +842,33 @@
           "options": {}
         },
         {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario"
+              }
+            ]
+          }
+        },
+        {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "protocol",
             "rowField": "scenario",
             "valueField": "Value"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario\\protocol"
+              }
+            ]
           }
         }
       ]
@@ -792,7 +894,11 @@
             "mode": "palette-classic"
           }
         },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "http1.1" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } } ] },
+          { "matcher": { "id": "byName", "options": "http2" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byName", "options": "http3" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
       },
       "options": {
         "orientation": "auto",
@@ -821,11 +927,33 @@
           "options": {}
         },
         {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario"
+              }
+            ]
+          }
+        },
+        {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "protocol",
             "rowField": "scenario",
             "valueField": "Value"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "scenario\\protocol"
+              }
+            ]
           }
         }
       ]
