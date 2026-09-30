@@ -1,0 +1,34 @@
+# --- Node -------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+
+# --- Raw experiment artefacts ----------
+results/summary.csv
+results/summary_aggregated.csv
+results/summary_by_phase.csv
+results/run_index.csv
+!results/raw/.gitkeep
+!results/logs/.gitkeep
+
+# --- Local environment ------------------------------------------------------
+.env
+
+# --- Caddy runtime data -----------------------------------------------------
+caddy_data/
+caddy_config/
+
+# --- OS / editors -----------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# --- xk6 build leftovers ----------------------------------------------------
+k6/k6
+k6/http1.1-http2/k6
+k6/http3/k6
+
+# --- Python -----------------------------------------------------------------
+__pycache__/
+*.pyc

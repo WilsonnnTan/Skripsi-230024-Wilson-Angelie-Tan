@@ -1,0 +1,16 @@
+{
+  "name": "http-testbed-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static REST API used as the fixed application under test in the HTTP/1.1 vs HTTP/2 vs HTTP/3 thesis.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "express": "4.22.2"
+  }
+}
