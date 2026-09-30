@@ -2,14 +2,6 @@
 node_modules/
 npm-debug.log*
 
-# --- Raw experiment artefacts ----------
-results/summary.csv
-results/summary_aggregated.csv
-results/summary_by_phase.csv
-results/run_index.csv
-!results/raw/.gitkeep
-!results/logs/.gitkeep
-
 # --- Local environment ------------------------------------------------------
 .env
 
