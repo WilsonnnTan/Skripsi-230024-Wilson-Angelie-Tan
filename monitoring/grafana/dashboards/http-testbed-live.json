@@ -32,7 +32,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(k6_reqs_total{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}[30s])) by (protocol, scenario, repetition)",
+          "expr": "sum(h2load_reqs_per_second{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
           "legendFormat": "{{protocol}} {{scenario}} r{{repetition}}"
         }
       ]
@@ -63,7 +63,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "100 * avg(k6_req_errors_rate{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "expr": "100 * avg(h2load_error_rate{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
           "legendFormat": "{{protocol}} {{scenario}} r{{repetition}}"
         }
       ]
@@ -94,25 +94,25 @@
         {
           "refId": "P50",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "avg(k6_req_duration_ms_p50{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "expr": "avg(h2load_req_duration_ms_p50{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
           "legendFormat": "p50 {{protocol}} {{scenario}} r{{repetition}}"
         },
         {
           "refId": "P90",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "avg(k6_req_duration_ms_p90{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "expr": "avg(h2load_req_duration_ms_p90{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
           "legendFormat": "p90 {{protocol}} {{scenario}} r{{repetition}}"
         },
         {
           "refId": "P95",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "avg(k6_req_duration_ms_p95{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "expr": "avg(h2load_req_duration_ms_p95{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
           "legendFormat": "p95 {{protocol}} {{scenario}} r{{repetition}}"
         },
         {
           "refId": "P99",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "avg(k6_req_duration_ms_p99{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
+          "expr": "avg(h2load_req_duration_ms_p99{protocol=~\"$protocol\", scenario=~\"$scenario\", repetition=~\"$repetition\", phase=~\"$phase\"}) by (protocol, scenario, repetition)",
           "legendFormat": "p99 {{protocol}} {{scenario}} r{{repetition}}"
         }
       ]
@@ -182,7 +182,7 @@
         "label": "Protocol",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "query": "label_values(k6_reqs_total, protocol)",
+        "query": "label_values(h2load_reqs_per_second, protocol)",
         "includeAll": true,
         "multi": true,
         "allValue": ".*",
@@ -195,7 +195,7 @@
         "label": "Scenario",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "query": "label_values(k6_reqs_total, scenario)",
+        "query": "label_values(h2load_reqs_per_second, scenario)",
         "includeAll": true,
         "multi": true,
         "allValue": ".*",
@@ -208,7 +208,7 @@
         "label": "Repetition",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "query": "label_values(k6_reqs_total, repetition)",
+        "query": "label_values(h2load_reqs_per_second, repetition)",
         "includeAll": true,
         "multi": true,
         "allValue": ".*",
@@ -221,7 +221,7 @@
         "label": "Phase",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "query": "label_values(k6_reqs_total, phase)",
+        "query": "label_values(h2load_reqs_per_second, phase)",
         "includeAll": true,
         "multi": true,
         "allValue": ".*",

@@ -1,7 +1,7 @@
 # Three isolated listeners so each protocol can be forced without ALPN ambiguity:
 #   8443 = HTTP/1.1 (TCP), 8444 = HTTP/2 (TCP), 8445 = HTTP/3 (QUIC/UDP).
 # `tls internal` uses Caddy's built-in CA (closed, offline environment).
-# k6 negotiates h2 via ALPN.
+# h2load negotiates h2 via ALPN.
 
 {
 	admin :2019

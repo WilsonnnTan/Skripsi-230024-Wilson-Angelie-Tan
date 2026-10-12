@@ -20,7 +20,7 @@
       },
       "options": {
         "mode": "markdown",
-        "content": "**Aggregate analysis (sustained phase).** Set the time range to your campaign window. Bars = one value per protocol×scenario aggregated over that range. These are *exploratory* aggregates of the live remote-write stream; the authoritative mean±std for the thesis is `results/summary_aggregated.csv` (and per-phase detail in `results/summary_by_phase.csv`). Server CPU/mem (Caddy, Backend) is untagged in cAdvisor; it is aligned to each run by masking on k6's sustained-phase request rate. Latency bars show the dashboard's average of k6's pushed percentile snapshots, not exact per-run percentiles."
+        "content": "**Aggregate analysis (sustained phase).** Set the time range to your campaign window. Bars = one value per protocol×scenario aggregated over that range. These are *exploratory* aggregates of the h2load-exporter's live rolling stream; the authoritative mean±std for the thesis is `results/summary_aggregated.csv` (and per-phase detail in `results/summary_by_phase.csv`), which are computed EXACTLY from the merged per-request logs. Server CPU/mem (Caddy, Backend) is untagged in cAdvisor; it is aligned to each run by masking on the h2load sustained-phase request rate. Latency bars show the dashboard's average of the exporter's rolling percentile snapshots, not the exact per-run percentiles."
       }
     },
     {
@@ -108,7 +108,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (rate(k6_reqs_total{phase=\"sustained\"}[1m])))[$__range:1m]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (h2load_reqs_per_second{phase=\"sustained\"}))[$__range:1m]))",
           "format": "table",
           "instant": true
         }
@@ -246,7 +246,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "100 * avg by (protocol, scenario) (avg_over_time(k6_req_errors_rate{phase=\"sustained\"}[$__range]))",
+          "expr": "100 * avg by (protocol, scenario) (avg_over_time(h2load_error_rate{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         }
@@ -384,7 +384,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p50{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p50{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         }
@@ -522,7 +522,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p90{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p90{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         }
@@ -660,7 +660,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         }
@@ -798,7 +798,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p99{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p99{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         }
@@ -980,7 +980,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (rate(k6_reqs_total{phase=\"sustained\"}[1m])))[$__range:1m]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (h2load_reqs_per_second{phase=\"sustained\"}))[$__range:1m]))",
           "format": "table",
           "instant": true
         },
@@ -990,7 +990,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p50{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p50{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         },
@@ -1000,7 +1000,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p90{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p90{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         },
@@ -1010,7 +1010,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         },
@@ -1020,7 +1020,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(k6_req_duration_ms_p99{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p99{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         },
@@ -1030,7 +1030,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "100 * avg by (protocol, scenario) (avg_over_time(k6_req_errors_rate{phase=\"sustained\"}[$__range]))",
+          "expr": "100 * avg by (protocol, scenario) (avg_over_time(h2load_error_rate{phase=\"sustained\"}[$__range]))",
           "format": "table",
           "instant": true
         }
@@ -1153,7 +1153,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"caddy\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"caddy\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
           "format": "table",
           "instant": true
         }
@@ -1291,7 +1291,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"caddy\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"caddy\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
           "format": "table",
           "instant": true
         }
@@ -1429,7 +1429,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"backend\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"backend\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
           "format": "table",
           "instant": true
         }
@@ -1567,7 +1567,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"backend\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (rate(k6_reqs_total{phase=\"sustained\"}[5s]) > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"backend\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
           "format": "table",
           "instant": true
         }

@@ -21,7 +21,7 @@ How the rule is applied:
   2. `nsenter -t <pid> -n` to enter ITS network namespace (so we never touch
      the host or the backend).
   3. Auto-detect the interface whose IPv4 address belongs to the emulated
-     edge subnet (172.28.0.0/24) -- i.e. the k6-facing link, NOT the backend
+     edge subnet (172.28.0.0/24) -- i.e. the loader-facing link, NOT the backend
      link. This keeps server-side traffic free of emulation.
   4. Replace the root qdisc with a single `netem` qdisc carrying delay, jitter,
      loss and rate.
@@ -43,6 +43,8 @@ HTTP_PORT = int(os.environ.get("HTTP_PORT", "4080"))
 DEFAULT_CONTAINER = os.environ.get("TARGET_CONTAINER", "caddy")
 EDGE_SUBNET_PREFIX = os.environ.get("EDGE_SUBNET_PREFIX", "172.28.")
 DEFAULT_IFACE = os.environ.get("TARGET_IFACE", "")
+# Name of the per-netns ifb mirror device used for ingress (downlink) shaping.
+IFB_DEV = os.environ.get("IFB_DEV", "ifb0")
 
 # ---- input validation (defense in depth; we never use a shell) -------------
 VALUE_RE = re.compile(r"^[0-9]+(\.[0-9]+)?(bit|kbit|mbit|gbit|tbit|bps|kbps|mbps|gbps|tbps|%|s|sec|secs|ms|msec|msecs|us|usec|usecs)?$")
@@ -95,64 +97,123 @@ def detect_interface(pid):
 
 
 def clear_rules(pid, iface):
-    # Deleting a non-existent root qdisc returns an error; ignore it.
+    # Egress: delete the root qdisc (no-op/error if none exists -> ignored).
     _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "del", "dev", iface, "root"])
+    # Ingress: delete the ingress qdisc that redirects into the ifb device.
+    _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "del", "dev", iface, "ingress"])
+    # Tear down the per-netns ifb mirror device, if we created one.
+    _run(["nsenter", "-t", pid, "-n", "ip", "link", "set", IFB_DEV, "down"])
+    _run(["nsenter", "-t", pid, "-n", "ip", "link", "del", IFB_DEV])
 
 
 def show_qdisc(pid, iface):
     rc, out, err = _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "show", "dev", iface])
-    return out if rc == 0 else err
+    eg = out if rc == 0 else err
+    # Also surface the ifb (ingress) qdisc so callers can verify symmetry.
+    rc2, out2, _ = _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "show", "dev", IFB_DEV])
+    if rc2 == 0 and out2:
+        return eg + " || ifb: " + out2
+    return eg
+
+
+def _as_number(text):
+    if not text:
+        return 0.0
+    m = re.match(r"^[0-9]+(\.[0-9]+)?", text)
+    return float(m.group(0)) if m else 0.0
+
+
+def _netem_args(rate, delay, jitter, loss):
+    """Build the trailing `netem ...` argv shared by egress and ingress."""
+    netem = ["netem"]
+    if _as_number(delay) > 0:
+        netem += ["delay", delay]
+        if _as_number(jitter) > 0:
+            netem += [jitter]
+    if _as_number(loss) > 0:
+        netem += ["loss", loss]
+    # netem's built-in token-bucket rate limiter = bandwidth cap.
+    if rate and rate != "0":
+        netem += ["rate", rate]
+    return netem
+
+
+def _setup_ingress(pid, iface, netem):
+    """Shape the INGRESS of `iface` by mirroring it onto an ifb device.
+
+    netem is egress-only, so to emulate the DOWNLINK (server->client responses
+    arriving at this loader) we redirect ingress packets to an ifb device and
+    apply the same netem there. Requires the host `ifb` kernel module (loaded at
+    startup); if unavailable these commands fail and the error propagates.
+    """
+    # Create + bring up the ifb device inside the target netns.
+    rc, out, err = _run(["nsenter", "-t", pid, "-n", "ip", "link", "add", IFB_DEV, "type", "ifb"])
+    if rc != 0 and "File exists" not in (err or ""):
+        raise RuntimeError(f"cannot create {IFB_DEV} (is the host 'ifb' module loaded?): {err or out}")
+    rc, out, err = _run(["nsenter", "-t", pid, "-n", "ip", "link", "set", IFB_DEV, "up"])
+    if rc != 0:
+        raise RuntimeError(f"cannot bring up {IFB_DEV}: {err or out}")
+
+    # Attach an ingress qdisc on the real iface and redirect everything to ifb.
+    _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "add", "dev", iface, "handle", "ffff:", "ingress"])
+    rc, out, err = _run(["nsenter", "-t", pid, "-n", "tc", "filter", "add", "dev", iface,
+                         "parent", "ffff:", "protocol", "all", "u32",
+                         "match", "u32", "0", "0",
+                         "action", "mirred", "egress", "redirect", "dev", IFB_DEV])
+    if rc != 0:
+        raise RuntimeError(f"ingress redirect to {IFB_DEV} failed: {err or out}")
+
+    # Apply netem on the ifb device = the emulated downlink.
+    rc, out, err = _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "add",
+                         "dev", IFB_DEV, "root", "handle", "1:"] + netem)
+    if rc != 0:
+        raise RuntimeError(f"ifb netem failed: {err or out}")
 
 
 def apply_rules(container, params):
-    """Apply a netem qdisc described by `params` to the edge interface."""
+    """Apply a netem qdisc described by `params` to the edge interface.
+
+    `direction` selects which link(s) are shaped:
+      both    (default) -> egress + ingress (full symmetric per-client link)
+      egress            -> client->server uplink only
+      ingress           -> server->client downlink only
+    """
     rate = (params.get("rate", [""])[0] or "").strip()
     delay = (params.get("delay", [""])[0] or "").strip()
     jitter = (params.get("jitter", [""])[0] or "").strip()
     loss = (params.get("loss", [""])[0] or "").strip()
+    direction = (params.get("direction", ["both"])[0] or "both").strip().lower()
 
     for label, value in (("rate", rate), ("delay", delay), ("jitter", jitter), ("loss", loss)):
         if value and not VALUE_RE.match(value):
             raise ValueError(f"invalid {label} value: {value!r}")
+    if direction not in ("both", "egress", "ingress"):
+        raise ValueError(f"invalid direction: {direction!r}")
 
     pid = container_pid(container)
     iface = detect_interface(pid)
     clear_rules(pid, iface)
 
-    netem = ["netem"]
-
-    # delay [JITTER]; a bare 0 delay is rejected by tc, so only add when > 0.
-    def as_number(text):
-        if not text:
-            return 0.0
-        m = re.match(r"^[0-9]+(\.[0-9]+)?", text)
-        return float(m.group(0)) if m else 0.0
-
-    if as_number(delay) > 0:
-        netem += ["delay", delay]
-        if as_number(jitter) > 0:
-            netem += [jitter]
-
-    if as_number(loss) > 0:
-        netem += ["loss", loss]
-
-    # netem's built-in token-bucket rate limiter = bandwidth cap.
-    if rate and rate != "0":
-        netem += ["rate", rate]
+    netem = _netem_args(rate, delay, jitter, loss)
 
     if len(netem) == 1:
         # Nothing to apply => unrestricted baseline.
         return {
             "container": container,
             "interface": iface,
+            "direction": direction,
             "applied": {},
             "qdisc": show_qdisc(pid, iface),
         }
 
-    rc, out, err = _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "add",
-                         "dev", iface, "root", "handle", "1:"] + netem)
-    if rc != 0:
-        raise RuntimeError(f"tc failed: {err or out}")
+    if direction in ("both", "egress"):
+        rc, out, err = _run(["nsenter", "-t", pid, "-n", "tc", "qdisc", "add",
+                             "dev", iface, "root", "handle", "1:"] + netem)
+        if rc != 0:
+            raise RuntimeError(f"egress tc failed: {err or out}")
+
+    if direction in ("both", "ingress"):
+        _setup_ingress(pid, iface, netem)
 
     qdisc = show_qdisc(pid, iface)
     if "netem" not in qdisc:
@@ -161,6 +222,7 @@ def apply_rules(container, params):
     return {
         "container": container,
         "interface": iface,
+        "direction": direction,
         "applied": {"rate": rate, "delay": delay, "jitter": jitter, "loss": loss},
         "qdisc": qdisc,
     }
@@ -235,6 +297,17 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    # Ingress (downlink) shaping mirrors traffic onto an ifb device, which needs
+    # the host 'ifb' kernel module. docker-tc runs privileged in the host PID +
+    # net namespaces, so load it once here; symmetric shaping fails loudly later
+    # if the WSL2/host kernel has no ifb module.
+    rc, _out, err = _run(["modprobe", "ifb", "numifbs=0"])
+    if rc == 0:
+        print("[docker-tc] ifb kernel module loaded (ingress shaping available)")
+    else:
+        print(f"[docker-tc] WARNING: could not load ifb module: {err} "
+              "(direction=ingress/both will fail)")
+
     server = ThreadingHTTPServer((HTTP_BIND, HTTP_PORT), Handler)
     print(f"[docker-tc] listening on {HTTP_BIND}:{HTTP_PORT}, default target='{DEFAULT_CONTAINER}'")
     server.serve_forever()

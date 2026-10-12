@@ -14,6 +14,7 @@ FROM debian:latest
 RUN apt-get update && apt-get install -y --no-install-recommends \
         iproute2 \
         util-linux \
+        kmod \
         docker-cli \
         python3 \
         bash \
