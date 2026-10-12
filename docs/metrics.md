@@ -6,19 +6,17 @@ This document details exactly how the metrics are extracted, transformed, and ag
 
 ## 1. Per-Run Metrics (The `summary.csv` File)
 
-For each of the 150 successful runs, the test measures **Client Metrics** from the `k6` summary JSON and **Server Metrics** queried directly from Prometheus via cAdvisor.
+For each of the 150 successful runs, the test measures **Client Metrics** from the merged h2load per-request logs and **Server Metrics** queried directly from Prometheus via cAdvisor.
 
-### Client Metrics (from k6)
-The k6 runner is configured to emit exact whole-window statistics per phase. For the headline results, the pipeline extracts the exact statistics from the `sustained` phase (a 60-second window).
+### Client Metrics (from the h2load logs)
+Every loader writes an h2load `--log-file` with one TAB-separated line per request: `start_us \t status \t duration_us` (`status = -1` on failure). `scripts/compute_percentiles.py` merges all 10 loader logs for a run, slices phases from the request timestamps themselves (`t0 = earliest request`; warmup 10 s, sustained 60 s, cooldown 10 s), and computes exact statistics over the `sustained` window.
 
 *   **Latency Percentiles ($p_{50}$, $p_{90}$, $p_{95}$, $p_{99}$):**
-    Extracted verbatim from the k6 trend `req_duration_ms{phase:sustained}`. These are mathematically exact percentiles calculated across all requests in the 60s window, not an average of percentiles.
+    Computed directly from the sorted per-request `duration_us` (converted to ms) of every request started inside the sustained window, across all 10 loaders. These are mathematically exact percentiles over the whole 60 s window (linear interpolation between ranks), not an average of percentiles.
 *   **Throughput (req/s):**
-    $$Throughput = \frac{\text{reqs\{phase:sustained\}.count}}{60 \text{ seconds}}$$
-    This divides the total number of request attempts during the sustained phase by 60.
+    $$Throughput = \frac{\text{\# requests started in the sustained window}}{60 \text{ seconds}}$$
 *   **Error Rate (%):**
-    $$Error Rate = \text{req\_errors\{phase:sustained\}.rate} \times 100$$
-    The rate (a float between 0.0 and 1.0 representing the fraction of failed requests) is converted to a percentage.
+    $$Error Rate = \frac{\text{\# requests with status} < 200 \text{ or} \ge 400 \text{ (incl. } -1)}{\text{\# requests}} \times 100$$
 
 ### Server Metrics (from cAdvisor -> Prometheus)
 Server metrics are aligned by time using the exact `sustained_start_epoch` and `sustained_end_epoch` recorded in `run_index.csv`.

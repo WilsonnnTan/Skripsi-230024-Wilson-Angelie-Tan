@@ -16,6 +16,7 @@ COMPOSE=(docker compose -f "${ROOT_DIR}/docker-compose.yml")
 TIMEOUT_SECONDS="${WAIT_TIMEOUT_SECONDS:-180}"
 DOCKER_TC_URL="http://localhost:4080/health"
 PROM_URL="http://localhost:9090/-/ready"
+EXPORTER_URL="http://localhost:9115/health"
 
 wait_for() {
   local description="$1"
@@ -45,10 +46,12 @@ wait_for "backend container" container_healthy backend
 wait_for "caddy container"   container_healthy caddy
 wait_for "docker-tc container" container_healthy docker-tc
 wait_for "prometheus container" container_healthy prometheus
+wait_for "h2load-exporter container" container_healthy h2load-exporter
 
 echo "[wait] checking service endpoints..."
 wait_for "docker-tc API"      curl -sSf "${DOCKER_TC_URL}"
 wait_for "prometheus ready"   curl -sSf "${PROM_URL}"
+wait_for "h2load-exporter"    curl -sSf "${EXPORTER_URL}"
 
 TC_URL="http://localhost:4080/caddy"
 
@@ -56,7 +59,7 @@ TC_URL="http://localhost:4080/caddy"
 cleanup_tc() { curl -sS -X DELETE "${TC_URL}" >/dev/null 2>&1 || true; }
 trap cleanup_tc EXIT
 
-echo "[wait] verifying netem can be applied to caddy..."
+echo "[wait] verifying netem can be applied (symmetric egress+ifb) to caddy as a docker-tc self-test..."
 
 test_tc() {
   local resp

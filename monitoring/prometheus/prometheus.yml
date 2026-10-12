@@ -2,13 +2,13 @@
 # Prometheus configuration
 # =============================================================================
 # - Scrapes cAdvisor at 1s resolution so short-lived CPU/memory peaks during
-#   the sustained phase are not averaged away.
-# - RECEIVES k6 metrics through the remote-write receiver on /api/v1/write
-#   (enabled by --web.enable-remote-write-receiver in docker-compose.yml).
+#   the sustained phase are not averaged away (server-side metrics, unchanged).
+# - Scrapes the h2load-exporter at 1s for LIVE client-side metrics (throughput,
+#   error rate, latency percentiles). h2load cannot remote-write like k6 did, so
+#   the exporter tails the loaders' per-request logs and exposes rolling stats.
 #
-# k6 labels (protocol, scenario, repetition, phase, ...) become Prometheus
-# labels automatically, which is what allows the sustained-only PromQL filters
-# used by scripts/export_results.sh.
+# The exporter labels series with protocol/scenario/repetition/phase so the
+# same sustained-only PromQL filters the Grafana dashboards rely on keep working.
 # =============================================================================
 global:
   scrape_interval: 1s
@@ -21,6 +21,12 @@ scrape_configs:
     scrape_timeout: 1s
     static_configs:
       - targets: ["cadvisor:8080"]
+
+  - job_name: h2load
+    scrape_interval: 1s
+    scrape_timeout: 1s
+    static_configs:
+      - targets: ["h2load-exporter:9115"]
 
   - job_name: prometheus
     scrape_interval: 5s

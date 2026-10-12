@@ -2,15 +2,16 @@
 # Research Testbed: HTTP/1.1 vs HTTP/2 vs HTTP/3 on a REST API
 # -----------------------------------------------------------------------------
 # Topology (see README for the ASCII architecture diagram):
-#   k6 --(edge_net)--> Caddy --(backend_net)--> backend (Express)
-#   docker-tc attaches netem/tbf rules to Caddy's *edge* interface only.
-#   cAdvisor -> Prometheus <- k6 (remote write); Grafana -> Prometheus.
+#   h2load x10 --(edge_net)--> Caddy --(backend_net)--> backend (Express)
+#   docker-tc attaches symmetric netem/tbf rules to EACH h2load container's
+#   *edge* interface (per-client link emulation), not to Caddy.
+#   cAdvisor -> Prometheus; h2load-exporter -> Prometheus; Grafana -> Prometheus.
 #
-# All resource limits follow the methodology table so that the load generator
-# never competes with the server for CPU/RAM (measurement bias control).
+# All resource limits follow the methodology table so that the load generators
+# never compete with the server for CPU/RAM (measurement bias control).
 #
 # Requires: Docker Engine + Docker Compose v2.20+ on a LINUX host
-#           (docker-tc/netem/nsenter are Linux-only).
+#           (docker-tc/netem/nsenter/ifb are Linux-only).
 # =============================================================================
 name: http-testbed
 
@@ -18,10 +19,10 @@ name: http-testbed
 # Reusable resource limit anchors
 # --------------------------------------------------------------------------- #
 # We use the classic `cpus` / `mem_limit` keys because Docker Compose enforces
-# them for BOTH `docker compose up` and `docker compose run` (the 150 runs use
+# them for BOTH `docker compose up` and `docker compose run` (the campaign uses
 # `run`). They encode the methodology limits exactly:
-#   backend 1 vCPU / 1 GB, caddy 1 vCPU / 1 GB,
-#   docker-tc 1 vCPU / 0.5 GB, k6 2 vCPU / 1 GB.
+#   backend 1 vCPU / 1 GB, caddy 1 vCPU / 1 GB, docker-tc 1 vCPU / 0.5 GB,
+#   and each of the 10 h2load loaders 0.25 vCPU / 256 MB (2.5 vCPU total).
 # --------------------------------------------------------------------------- #
 x-limits-backend: &limits-backend
   cpus: "1.0"
@@ -35,9 +36,9 @@ x-limits-docker-tc: &limits-docker-tc
   cpus: "1.0"
   mem_limit: 512m
 
-x-limits-k6: &limits-k6
-  cpus: "2.0"
-  mem_limit: 1g
+x-limits-h2load: &limits-h2load
+  cpus: "0.25"
+  mem_limit: 256m
 
 services:
   # ------------------------------------------------------------------------- #
@@ -112,9 +113,11 @@ services:
   # ------------------------------------------------------------------------- #
   # 3. docker-tc: network emulation controller (bandwidth/delay/jitter/loss).
   #    Runs on the HOST network + host PID namespace so it can `nsenter` into
-  #    Caddy's network namespace and call `tc`. Controlled via REST API :4080.
-  #    NOTE: the upstream lukaszlach/docker-tc image cannot emulate *jitter*,
-  #    so this project ships an API-compatible extended image (see docker-tc/).
+  #    each h2load container's network namespace and call `tc`. Controlled via
+  #    REST API :4080. Now shapes the LOADERS (per-client link), not Caddy, and
+  #    emulates BOTH directions (egress netem + ingress via an ifb mirror).
+  #    NOTE: the upstream lukaszlach/docker-tc image cannot emulate *jitter* or
+  #    ingress, so this project ships an API-compatible extended image (docker-tc/).
   # ------------------------------------------------------------------------- #
   docker-tc:
     build:
@@ -124,7 +127,7 @@ services:
     container_name: docker-tc
     <<: *limits-docker-tc
     # Support plane: kept off the SUT cores so netem control never contends
-    # with backend/caddy/k6.
+    # with backend/caddy/loaders.
     cpuset: "${CPUSET_SUPPORT:-8-11}"
     network_mode: host
     pid: host
@@ -132,6 +135,8 @@ services:
     environment:
       HTTP_PORT: "4080"
       HTTP_BIND: "0.0.0.0"
+      # Default target is unused (the campaign posts to each loader by name),
+      # but kept for ad-hoc GET/DELETE convenience.
       TARGET_CONTAINER: "caddy"
       EDGE_SUBNET_PREFIX: "172.28."
     volumes:
@@ -145,65 +150,61 @@ services:
     restart: unless-stopped
 
   # ------------------------------------------------------------------------- #
-  # 4a. k6 (HTTP/1.1 + HTTP/2): load generator on a stock k6 v1.8.1. Started on
-  #     demand by scripts/run_experiments.sh via `docker compose run --rm k6`.
+  # 4. h2load: load-generator TEMPLATE. The campaign launches 10 instances of
+  #    this service per run with `docker compose run -d --name h2load_run_<i>`,
+  #    one process per container. A single h2load binary (built with HTTP/3)
+  #    drives all three protocols — the protocol is chosen per-run via env.
+  #    Hidden behind the `loadgen` profile so a plain `docker compose up` never
+  #    starts it; `docker compose run` ignores the profile.
   # ------------------------------------------------------------------------- #
-  k6:
+  h2load:
     build:
-      context: ./k6/http1.1-http2
+      context: ./h2load
       dockerfile: Dockerfile
-    image: http-testbed/k6:latest
-    <<: *limits-k6
-    # Load generator on its own P-cores so it never competes with the SUT
-    # (measurement-bias control, methodology 3.x). 2 vCPU -> 4 threads here.
-    cpuset: "${CPUSET_K6:-4-7}"
-    depends_on:
-      caddy:
-        condition: service_healthy
-    # The service is idle by default; the automation overrides the command.
-    command: ["version"]
-    environment:
-      # Prometheus remote-write target (resolved on monitoring_net).
-      K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
-      K6_PROMETHEUS_RW_PUSH_INTERVAL: "1s"
-      K6_PROMETHEUS_RW_TREND_STATS: "avg,min,max,med,p(50),p(90),p(95),p(99),count"
-      K6_PROMETHEUS_RW_STALE_MARKERS: "true"
+    image: http-testbed/h2load:latest
+    profiles: ["loadgen"]
+    <<: *limits-h2load
+    # All 10 loaders share the load-generator cores (0.25 vCPU quota each keeps
+    # them within 2.5 vCPU total, off the SUT cores).
+    cpuset: "${CPUSET_LOADER:-4-7}"
+    # Parameters (TARGET_URL, PROTOCOL, LOG_FILE, CLIENTS, STREAMS, PRESTART,
+    # DURATION) are injected per-run by scripts/run_experiments.sh.
     volumes:
-      - ./k6/http1.1-http2/script.js:/scripts/script.js:ro
       - ./results:/results
     networks:
       - edge_net
-      - monitoring_net
     restart: "no"
 
   # ------------------------------------------------------------------------- #
-  # 4b. k6 (HTTP/3): separate image because xk6-http3 v0.2.0 pins k6 v0.48.0.
-  #     Selected automatically by run_experiments.sh for the http3 protocol.
-  #     Shares the k6 cpuset — the two k6 services never run simultaneously.
+  # 4b. h2load-exporter: tails the per-request logs of the 10 loaders for the
+  #     run in progress and exposes rolling client-side metrics (throughput,
+  #     error rate, p50/p90/p95/p99) for Prometheus to scrape — the live view
+  #     h2load cannot remote-write itself. Server CPU/mem stay on cAdvisor.
   # ------------------------------------------------------------------------- #
-  k6-http3:
+  h2load-exporter:
     build:
-      context: ./k6/http3
+      context: ./monitoring/exporter
       dockerfile: Dockerfile
-    image: http-testbed/k6-http3:latest
-    <<: *limits-k6
-    cpuset: "${CPUSET_K6:-4-7}"
-    depends_on:
-      caddy:
-        condition: service_healthy
-    command: ["version"]
+    image: http-testbed/h2load-exporter:latest
+    container_name: h2load-exporter
     environment:
-      K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
-      K6_PROMETHEUS_RW_PUSH_INTERVAL: "1s"
-      K6_PROMETHEUS_RW_TREND_STATS: "avg,min,max,med,p(50),p(90),p(95),p(99),count"
-      K6_PROMETHEUS_RW_STALE_MARKERS: "true"
+      HTTP_PORT: "9115"
+      LIVE_DIR: "/results/live"
+      WINDOW_S: "10"
     volumes:
-      - ./k6/http3/script.js:/scripts/script.js:ro
-      - ./results:/results
+      - ./results:/results:ro
     networks:
-      - edge_net
       - monitoring_net
-    restart: "no"
+    cpuset: "${CPUSET_SUPPORT:-8-11}"
+    cpus: "0.5"
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:9115/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 3s
+    restart: unless-stopped
 
   # ------------------------------------------------------------------------- #
   # 5. cAdvisor: per-container CPU / memory from cgroups.
@@ -247,7 +248,8 @@ services:
     restart: unless-stopped
 
   # ------------------------------------------------------------------------- #
-  # 6. Prometheus: scrapes cAdvisor (1s), receives k6 remote write.
+  # 6. Prometheus: scrapes cAdvisor (1s, server metrics) and the h2load-exporter
+  #    (1s, live client metrics). h2load does not remote-write.
   # ------------------------------------------------------------------------- #
   prometheus:
     image: prom/prometheus:v3.13.3
@@ -259,13 +261,11 @@ services:
       # Long retention: must cover the full 150-run campaign + analysis.
       - --storage.tsdb.retention.time=30d
       - --web.enable-lifecycle
-      # Required to accept k6's `experimental-prometheus-rw` output.
-      - --web.enable-remote-write-receiver
       - --query.lookback-delta=5m
       - --web.enable-admin-api
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
+      - ./prometheus_data:/prometheus
     ports:
       - "9090:9090"
     networks:
