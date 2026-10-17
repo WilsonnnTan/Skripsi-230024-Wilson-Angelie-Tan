@@ -1,0 +1,330 @@
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_1.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 392.60 req/s, 3.10MB/s
+requests: 31408 total, 31414 started, 31408 done, 31408 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31408 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 247.65MB (259681354) total, 2.10MB (2198560) headers (space savings 48.91%), 245.38MB (257294336) data
+UDP datagram: 47275 sent, 261908 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.59ms     61.96ms     13.22ms     24.73ms     31.83ms     14.39ms      5.50ms    74.83%
+connect     :    10.77ms     10.77ms     10.77ms     10.77ms     10.77ms     10.77ms         0us   100.00%
+TTFB        :    16.14ms     16.14ms     16.14ms     16.14ms     16.14ms     16.14ms         0us   100.00%
+req/s       :     392.59      392.59      392.59      392.59      392.59      392.59        0.00   100.00%
+min RTT     :       16us        16us        16us        16us        16us        16us         0us   100.00%
+smoothed RTT:     4.57ms      4.57ms      4.57ms      4.57ms      4.57ms      4.57ms         0us   100.00%
+packets sent:      47277       47277       47277       47277       47277    47277.00        0.00   100.00%
+packets recv:     261910      261910      261910      261910      261910   261910.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          13        2.48        1.81    97.67%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_2.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 390.75 req/s, 3.08MB/s
+requests: 31260 total, 31266 started, 31260 done, 31260 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31260 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 246.48MB (258457690) total, 2.09MB (2188200) headers (space savings 48.91%), 244.22MB (256081920) data
+UDP datagram: 47052 sent, 260542 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.59ms     66.05ms     13.29ms     24.66ms     32.08ms     14.46ms      5.52ms    74.94%
+connect     :     9.47ms      9.47ms      9.47ms      9.47ms      9.47ms      9.47ms         0us   100.00%
+TTFB        :    15.41ms     15.41ms     15.41ms     15.41ms     15.41ms     15.41ms         0us   100.00%
+req/s       :     390.75      390.75      390.75      390.75      390.75      390.75        0.00   100.00%
+min RTT     :       15us        15us        15us        15us        15us        15us         0us   100.00%
+smoothed RTT:     5.42ms      5.42ms      5.42ms      5.42ms      5.42ms      5.42ms         0us   100.00%
+packets sent:      47054       47054       47054       47054       47054    47054.00        0.00   100.00%
+packets recv:     260544      260544      260544      260544      260544   260544.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          12        2.48        1.80    97.74%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_3.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 392.04 req/s, 3.09MB/s
+requests: 31363 total, 31369 started, 31363 done, 31363 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31363 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 247.30MB (259309294) total, 2.09MB (2195410) headers (space savings 48.91%), 245.02MB (256925696) data
+UDP datagram: 47088 sent, 261554 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.54ms     58.07ms     13.23ms     24.77ms     32.33ms     14.41ms      5.53ms    75.07%
+connect     :     9.97ms      9.97ms      9.97ms      9.97ms      9.97ms      9.97ms         0us   100.00%
+TTFB        :    15.14ms     15.14ms     15.14ms     15.14ms     15.14ms     15.14ms         0us   100.00%
+req/s       :     392.04      392.04      392.04      392.04      392.04      392.04        0.00   100.00%
+min RTT     :       15us        15us        15us        15us        15us        15us         0us   100.00%
+smoothed RTT:     4.65ms      4.65ms      4.65ms      4.65ms      4.65ms      4.65ms         0us   100.00%
+packets sent:      47090       47090       47090       47090       47090    47090.00        0.00   100.00%
+packets recv:     261556      261556      261556      261556      261556   261556.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          12        2.48        1.81    97.65%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_4.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 390.69 req/s, 3.08MB/s
+requests: 31255 total, 31261 started, 31255 done, 31255 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31256 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 246.45MB (258420325) total, 2.09MB (2187920) headers (space savings 48.91%), 244.18MB (256044859) data
+UDP datagram: 46748 sent, 260392 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.44ms     61.18ms     13.33ms     24.84ms     31.69ms     14.46ms      5.50ms    74.61%
+connect     :     9.82ms      9.82ms      9.82ms      9.82ms      9.82ms      9.82ms         0us   100.00%
+TTFB        :    15.35ms     15.35ms     15.35ms     15.35ms     15.35ms     15.35ms         0us   100.00%
+req/s       :     390.68      390.68      390.68      390.68      390.68      390.68        0.00   100.00%
+min RTT     :       19us        19us        19us        19us        19us        19us         0us   100.00%
+smoothed RTT:     4.79ms      4.79ms      4.79ms      4.79ms      4.79ms      4.79ms         0us   100.00%
+packets sent:      46750       46750       46750       46750       46750    46750.00        0.00   100.00%
+packets recv:     260394      260394      260394      260394      260394   260394.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          12        2.49        1.80    97.74%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_5.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 391.21 req/s, 3.08MB/s
+requests: 31297 total, 31303 started, 31297 done, 31297 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31297 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 246.78MB (258763609) total, 2.09MB (2190790) headers (space savings 48.91%), 244.51MB (256385024) data
+UDP datagram: 47364 sent, 260782 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.58ms     62.40ms     13.28ms     24.80ms     32.02ms     14.45ms      5.52ms    74.64%
+connect     :    11.36ms     11.36ms     11.36ms     11.36ms     11.36ms     11.36ms         0us   100.00%
+TTFB        :    16.49ms     16.49ms     16.49ms     16.49ms     16.49ms     16.49ms         0us   100.00%
+req/s       :     391.21      391.21      391.21      391.21      391.21      391.21        0.00   100.00%
+min RTT     :       18us        18us        18us        18us        18us        18us         0us   100.00%
+smoothed RTT:     4.49ms      4.49ms      4.49ms      4.49ms      4.49ms      4.49ms         0us   100.00%
+packets sent:      47366       47366       47366       47366       47366    47366.00        0.00   100.00%
+packets recv:     260784      260784      260784      260784      260784   260784.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          16           3           4          12        2.48        1.81    97.69%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_6.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 390.86 req/s, 3.08MB/s
+requests: 31269 total, 31275 started, 31269 done, 31269 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31270 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 246.56MB (258536077) total, 2.09MB (2188900) headers (space savings 48.91%), 244.29MB (256159547) data
+UDP datagram: 47112 sent, 260579 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.52ms     63.62ms     13.27ms     24.62ms     32.07ms     14.46ms      5.50ms    74.45%
+connect     :    10.19ms     10.19ms     10.19ms     10.19ms     10.19ms     10.19ms         0us   100.00%
+TTFB        :    15.06ms     15.06ms     15.06ms     15.06ms     15.06ms     15.06ms         0us   100.00%
+req/s       :     390.86      390.86      390.86      390.86      390.86      390.86        0.00   100.00%
+min RTT     :       10us        10us        10us        10us        10us        10us         0us   100.00%
+smoothed RTT:     4.93ms      4.93ms      4.93ms      4.93ms      4.93ms      4.93ms         0us   100.00%
+packets sent:      47114       47114       47114       47114       47114    47114.00        0.00   100.00%
+packets recv:     260581      260581      260581      260581      260581   260581.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          13        2.48        1.83    97.62%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_7.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 392.09 req/s, 3.09MB/s
+requests: 31367 total, 31373 started, 31367 done, 31367 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31367 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 247.33MB (259342366) total, 2.09MB (2195690) headers (space savings 48.91%), 245.05MB (256958464) data
+UDP datagram: 47518 sent, 261557 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.57ms     63.72ms     13.24ms     24.63ms     31.93ms     14.41ms      5.50ms    74.69%
+connect     :    10.14ms     10.14ms     10.14ms     10.14ms     10.14ms     10.14ms         0us   100.00%
+TTFB        :    17.30ms     17.30ms     17.30ms     17.30ms     17.30ms     17.30ms         0us   100.00%
+req/s       :     392.08      392.08      392.08      392.08      392.08      392.08        0.00   100.00%
+min RTT     :       17us        17us        17us        17us        17us        17us         0us   100.00%
+smoothed RTT:     4.15ms      4.15ms      4.15ms      4.15ms      4.15ms      4.15ms         0us   100.00%
+packets sent:      47520       47520       47520       47520       47520    47520.00        0.00   100.00%
+packets recv:     261559      261559      261559      261559      261559   261559.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          12        2.48        1.80    97.76%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_8.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 390.65 req/s, 3.08MB/s
+requests: 31252 total, 31258 started, 31252 done, 31252 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31252 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 246.42MB (258391546) total, 2.09MB (2187640) headers (space savings 48.91%), 244.16MB (256016384) data
+UDP datagram: 47249 sent, 260447 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.56ms     66.51ms     13.27ms     24.74ms     31.76ms     14.47ms      5.49ms    74.50%
+connect     :     9.96ms      9.96ms      9.96ms      9.96ms      9.96ms      9.96ms         0us   100.00%
+TTFB        :    18.52ms     18.52ms     18.52ms     18.52ms     18.52ms     18.52ms         0us   100.00%
+req/s       :     390.65      390.65      390.65      390.65      390.65      390.65        0.00   100.00%
+min RTT     :       14us        14us        14us        14us        14us        14us         0us   100.00%
+smoothed RTT:     5.85ms      5.85ms      5.85ms      5.85ms      5.85ms      5.85ms         0us   100.00%
+packets sent:      47251       47251       47251       47251       47251    47251.00        0.00   100.00%
+packets recv:     260449      260449      260449      260449      260449   260449.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          12        2.49        1.80    97.70%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_9.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 391.80 req/s, 3.09MB/s
+requests: 31344 total, 31350 started, 31344 done, 31344 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31344 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 247.15MB (259152202) total, 2.09MB (2194080) headers (space savings 48.91%), 244.88MB (256770048) data
+UDP datagram: 47103 sent, 261318 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.58ms     64.67ms     13.24ms     24.64ms     31.87ms     14.42ms      5.50ms    74.51%
+connect     :     9.78ms      9.78ms      9.78ms      9.78ms      9.78ms      9.78ms         0us   100.00%
+TTFB        :    14.58ms     14.58ms     14.58ms     14.58ms     14.58ms     14.58ms         0us   100.00%
+req/s       :     391.80      391.80      391.80      391.80      391.80      391.80        0.00   100.00%
+min RTT     :       15us        15us        15us        15us        15us        15us         0us   100.00%
+smoothed RTT:     4.60ms      4.60ms      4.60ms      4.60ms      4.60ms      4.60ms         0us   100.00%
+packets sent:      47105       47105       47105       47105       47105    47105.00        0.00   100.00%
+packets recv:     261320      261320      261320      261320      261320   261320.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          13        2.48        1.81    97.67%
+[h2load] protocol=http3 url=https://caddy:8445/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http3_S1_5/h2load_10.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: h3
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.01s, 389.09 req/s, 3.07MB/s
+requests: 31127 total, 31133 started, 31127 done, 31127 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 31127 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 245.44MB (257358046) total, 2.08MB (2178890) headers (space savings 48.91%), 243.18MB (254992384) data
+UDP datagram: 46774 sent, 259354 received
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :     4.57ms     59.23ms     13.37ms     24.77ms     31.57ms     14.52ms      5.47ms    74.43%
+connect     :    12.34ms     12.34ms     12.34ms     12.34ms     12.34ms     12.34ms         0us   100.00%
+TTFB        :    17.55ms     17.55ms     17.55ms     17.55ms     17.55ms     17.55ms         0us   100.00%
+req/s       :     389.05      389.05      389.05      389.05      389.05      389.05        0.00   100.00%
+min RTT     :       17us        17us        17us        17us        17us        17us         0us   100.00%
+smoothed RTT:     4.62ms      4.62ms      4.62ms      4.62ms      4.62ms      4.62ms         0us   100.00%
+packets sent:      46776       46776       46776       46776       46776    46776.00        0.00   100.00%
+packets recv:     259356      259356      259356      259356      259356   259356.00        0.00   100.00%
+packets lost:          0           0           0           0           0        0.00        0.00   100.00%
+GRO packets :          1          14           3           4          13        2.49        1.81    97.75%

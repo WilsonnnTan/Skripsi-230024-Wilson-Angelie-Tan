@@ -7,10 +7,9 @@
 #     3 protocols x 5 network scenarios x 10 repetitions = 150 runs
 #
 # A single h2load image (built with HTTP/3) drives all three protocols. Each run
-# launches LOADERS (10) h2load containers in parallel; together they keep ~60
-# requests in flight for the whole DURATION (the h2load analogue of the old k6
-# batched-VU design). Phases are sliced by request timestamp afterwards.
-#
+# launches LOADERS (10) h2load containers in parallel;
+# Phases are sliced by request timestamp afterwards.
+
 # For every combination it:
 #   1. launches the 10 loader containers (each sleeps PRESTART before loading)
 #   2. applies the network scenario to EACH loader (docker-tc, symmetric netem)
@@ -50,10 +49,9 @@ DRY_RUN="${DRY_RUN:-0}"
 
 PROTOCOLS=("http1.1" "http2" "http3")
 declare -A PROTO_PORT=( ["http1.1"]="8443" ["http2"]="8444" ["http3"]="8445" )
-# Per-container concurrency so that LOADERS * (clients*streams) ~= 60 in flight.
-# h1 needs one connection per in-flight request; h2/h3 multiplex over one.
-declare -A PROTO_CLIENTS=( ["http1.1"]="6" ["http2"]="1" ["http3"]="1" )
-declare -A PROTO_STREAMS=( ["http1.1"]="1" ["http2"]="6" ["http3"]="6" )
+declare -A PROTO_CLIENTS=( ["http1.1"]="1" ["http2"]="1" ["http3"]="1" )
+# NOTE: HTTP/1.1 doesnt support concurrent stream and h2load will ignore the STREAMS flag
+declare -A PROTO_STREAMS=( ["http1.1"]="6" ["http2"]="6" ["http3"]="6" )
 SCENARIOS_LIST=(S1 S2 S3 S4 S5)
 
 mkdir -p "${RAW_DIR}" "${LOG_DIR}" "${LIVE_DIR}"

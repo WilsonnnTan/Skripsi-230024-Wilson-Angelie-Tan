@@ -1,0 +1,260 @@
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_1.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.48 req/s, 183.44KB/s
+requests: 1798 total, 1804 started, 1798 done, 1798 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1798 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.33MB (15027684) total, 222.99KB (228346) headers (space savings 0.00%), 14.05MB (14729216) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.31ms    549.79ms    263.33ms    263.71ms    274.65ms    262.60ms     14.29ms    95.16%
+connect     :   463.46ms    463.46ms    463.46ms    463.46ms    463.46ms    463.46ms         0us   100.00%
+TTFB        :   623.93ms    623.93ms    623.93ms    623.93ms    623.93ms    623.93ms         0us   100.00%
+req/s       :      22.47       22.47       22.47       22.47       22.47       22.47        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_2.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.48 req/s, 183.44KB/s
+requests: 1798 total, 1804 started, 1798 done, 1798 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1798 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.33MB (15027684) total, 222.99KB (228346) headers (space savings 0.00%), 14.05MB (14729216) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.00ms    549.83ms    263.27ms    263.70ms    277.29ms    262.54ms     14.41ms    94.94%
+connect     :   463.67ms    463.67ms    463.67ms    463.67ms    463.67ms    463.67ms         0us   100.00%
+TTFB        :   624.31ms    624.31ms    624.31ms    624.31ms    624.31ms    624.31ms         0us   100.00%
+req/s       :      22.47       22.47       22.47       22.47       22.47       22.47        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_3.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.46 req/s, 183.39KB/s
+requests: 1797 total, 1803 started, 1797 done, 1797 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1798 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.33MB (15023422) total, 222.99KB (228346) headers (space savings 0.00%), 14.04MB (14724954) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.87ms    549.79ms    263.28ms    263.71ms    290.37ms    262.67ms     14.37ms    94.88%
+connect     :   463.69ms    463.69ms    463.69ms    463.69ms    463.69ms    463.69ms         0us   100.00%
+TTFB        :   624.14ms    624.14ms    624.14ms    624.14ms    624.14ms    624.14ms         0us   100.00%
+req/s       :      22.46       22.46       22.46       22.46       22.46       22.46        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_4.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.48 req/s, 183.44KB/s
+requests: 1798 total, 1804 started, 1798 done, 1798 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1798 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.33MB (15027684) total, 222.99KB (228346) headers (space savings 0.00%), 14.05MB (14729216) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.02ms    550.44ms    263.20ms    263.68ms    271.90ms    262.59ms     13.97ms    95.61%
+connect     :   463.56ms    463.56ms    463.56ms    463.56ms    463.56ms    463.56ms         0us   100.00%
+TTFB        :   624.63ms    624.63ms    624.63ms    624.63ms    624.63ms    624.63ms         0us   100.00%
+req/s       :      22.47       22.47       22.47       22.47       22.47       22.47        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_5.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.46 req/s, 183.34KB/s
+requests: 1797 total, 1803 started, 1797 done, 1797 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1797 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.32MB (15019326) total, 222.87KB (228219) headers (space savings 0.00%), 14.04MB (14721024) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.30ms    549.84ms    263.21ms    263.68ms    274.01ms    262.65ms     14.09ms    95.55%
+connect     :   463.63ms    463.63ms    463.63ms    463.63ms    463.63ms    463.63ms         0us   100.00%
+TTFB        :   624.17ms    624.17ms    624.17ms    624.17ms    624.17ms    624.17ms         0us   100.00%
+req/s       :      22.46       22.46       22.46       22.46       22.46       22.46        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_6.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.45 req/s, 183.29KB/s
+requests: 1796 total, 1802 started, 1796 done, 1796 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1797 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.32MB (15015064) total, 222.87KB (228219) headers (space savings 0.00%), 14.03MB (14716762) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   198.10ms    549.75ms    263.42ms    263.76ms    291.16ms    262.86ms     14.40ms    94.88%
+connect     :   463.87ms    463.87ms    463.87ms    463.87ms    463.87ms    463.87ms         0us   100.00%
+TTFB        :   624.29ms    624.29ms    624.29ms    624.29ms    624.29ms    624.29ms         0us   100.00%
+req/s       :      22.45       22.45       22.45       22.45       22.45       22.45        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_7.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.48 req/s, 183.44KB/s
+requests: 1798 total, 1804 started, 1798 done, 1798 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1798 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.33MB (15027684) total, 222.99KB (228346) headers (space savings 0.00%), 14.05MB (14729216) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.13ms    550.19ms    263.23ms    263.67ms    279.62ms    262.45ms     14.16ms    94.94%
+connect     :   463.57ms    463.57ms    463.57ms    463.57ms    463.57ms    463.57ms         0us   100.00%
+TTFB        :   624.58ms    624.58ms    624.58ms    624.58ms    624.58ms    624.58ms         0us   100.00%
+req/s       :      22.47       22.47       22.47       22.47       22.47       22.47        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_8.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.46 req/s, 183.34KB/s
+requests: 1797 total, 1803 started, 1797 done, 1797 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1797 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.32MB (15019326) total, 222.87KB (228219) headers (space savings 0.00%), 14.04MB (14721024) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.10ms    549.67ms    263.18ms    263.68ms    274.29ms    262.59ms     14.10ms    95.49%
+connect     :   463.96ms    463.96ms    463.96ms    463.96ms    463.96ms    463.96ms         0us   100.00%
+TTFB        :   624.38ms    624.38ms    624.38ms    624.38ms    624.38ms    624.38ms         0us   100.00%
+req/s       :      22.46       22.46       22.46       22.46       22.46       22.46        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_9.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.45 req/s, 183.29KB/s
+requests: 1796 total, 1802 started, 1796 done, 1796 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1797 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.32MB (15015064) total, 222.87KB (228219) headers (space savings 0.00%), 14.03MB (14716762) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   198.09ms    549.75ms    263.35ms    263.73ms    291.10ms    262.80ms     14.37ms    94.88%
+connect     :   463.57ms    463.57ms    463.57ms    463.57ms    463.57ms    463.57ms         0us   100.00%
+TTFB        :   624.01ms    624.01ms    624.01ms    624.01ms    624.01ms    624.01ms         0us   100.00%
+req/s       :      22.45       22.45       22.45       22.45       22.45       22.45        0.00   100.00%
+[h2load] protocol=http1.1 url=https://caddy:8443/api/data c=1 m=6 t=1 duration=80s prestart=3s log=/results/raw/http1.1_S4_1/h2load_10.log
+starting benchmark...
+spawning thread #0: 1 total client(s). Timing-based test with 0s of warm-up time and 80s of main duration for measurements.
+Warm-up started for thread #0.
+progress: 100% of clients started
+Warm-up phase is over for thread #0.
+Main benchmark duration is started for thread #0.
+TLS Protocol: TLSv1.3
+Cipher: TLS_AES_128_GCM_SHA256
+Server Temp Key: X25519 253 bits
+Certificate: ECDSA prime256v1 256 bits
+Negotiated Group: x25519
+Resumption: no
+Application protocol: http/1.1
+Main benchmark duration is over for thread #0. Stopping all clients.
+Stopped all clients for thread #0
+
+finished in 80.00s, 22.48 req/s, 183.49KB/s
+requests: 1798 total, 1804 started, 1798 done, 1798 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 1799 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 14.34MB (15031780) total, 223.12KB (228473) headers (space savings 0.00%), 14.05MB (14733146) data
+                 min         max         median      p95         p99         mean        sd         +/- sd
+request     :   197.50ms    549.52ms    263.37ms    263.71ms    274.34ms    262.64ms     14.16ms    95.05%
+connect     :   463.35ms    463.35ms    463.35ms    463.35ms    463.35ms    463.35ms         0us   100.00%
+TTFB        :   623.72ms    623.72ms    623.72ms    623.72ms    623.72ms    623.72ms         0us   100.00%
+req/s       :      22.47       22.47       22.47       22.47       22.47       22.47        0.00   100.00%
