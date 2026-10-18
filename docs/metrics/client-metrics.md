@@ -15,14 +15,25 @@ start_us    status    duration_us
 
 ## Metrics Computed
 
-### 1. Latency Percentiles ($p_{50}$, $p_{90}$, $p_{95}$, $p_{99}$)
+### 1. Latency Percentiles (p50, p90, p95, p99)
 - `scripts/compute_percentiles.py` pools the raw per-request durations (converted to milliseconds) for all requests initiated inside the 60-second sustained phase across all 10 loaders.
-- Percentiles are calculated via linear rank interpolation over the entire pooled population ($N \approx 60,000$ requests per run), guaranteeing mathematical precision rather than an average of percentiles.
+- Percentiles are calculated via linear rank interpolation over the entire pooled population (~60,000 requests per run), guaranteeing mathematical precision rather than an average of percentiles.
 
 ### 2. Sustained Throughput
-$$\text{Throughput (req/s)} = \frac{N_{\text{sustained}}}{60.0\text{ seconds}}$$
-where $N_{\text{sustained}}$ is the total count of requests started within the sustained window.
+
+```text
+Throughput (req/s) = N_sustained / 60.0
+```
+
+Where:
+- `N_sustained`: Total number of requests initiated within the 60-second sustained measurement window.
 
 ### 3. Error Rate
-$$\text{Error Rate (\%)} = \frac{N_{\text{error}}}{N_{\text{sustained}}} \times 100$$
-where $N_{\text{error}}$ represents all requests where status is either $< 200$, $\ge 400$, or equal to $-1$.
+
+```text
+Error Rate (%) = (N_failed / N_total) × 100
+```
+
+Where:
+- `N_failed`: Total requests with status `< 200`, `≥ 400`, or `-1` (connection timeout or TCP reset).
+- `N_total`: Total requests initiated within the sustained window.

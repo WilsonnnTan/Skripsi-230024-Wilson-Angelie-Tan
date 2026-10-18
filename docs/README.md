@@ -7,10 +7,7 @@
 This project is a fully automated research testbed designed for a thesis (Skripsi) comparing the performance of three HTTP protocol versions — **HTTP/1.1**, **HTTP/2**, and **HTTP/3** — over a REST API under realistic network conditions.
 
 The testbed runs **150 experiments** in total:
-
-$$
-3 \text{ protocols} \times 5 \text{ network scenarios} \times 10 \text{ repetitions} = 150 \text{ runs}
-$$
+> **3 protocols × 5 network scenarios × 10 repetitions = 150 total runs**
 
 Each run launches **10 parallel load-generator containers** that drive traffic through a Caddy reverse proxy to an Express.js backend, while network conditions (bandwidth, latency, jitter, packet loss) are applied symmetrically to each loader via Linux `tc netem`.
 

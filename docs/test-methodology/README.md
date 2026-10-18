@@ -17,10 +17,7 @@ graph TD
 
     style matrix fill:#e8eaf6,stroke:#283593
 ```
-
-$$
-3 \text{ protocols} \times 5 \text{ scenarios} \times 10 \text{ repetitions} = 150 \text{ runs}
-$$
+> **3 protocols × 5 scenarios × 10 repetitions = 150 total runs**
 
 ## Independent Variables
 

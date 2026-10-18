@@ -1,21 +1,38 @@
 # Aggregation & Statistics
 
-Each protocol/scenario combination is executed across 10 identical repetitions ($R_1 \dots R_{10}$) to measure variance and guarantee statistical validity.
+Each protocol/scenario combination is executed across 10 identical repetitions (R1 to R10) to measure variance and guarantee statistical validity.
 
 ## Mathematical Formulation
 
-The aggregation script groups rows in `results/summary.csv` by `(protocol, scenario)` and calculates sample parameters across valid observations $v_1, \dots, v_c$:
+The aggregation script groups rows in `results/summary.csv` by `(protocol, scenario)` and calculates sample parameters across valid observations `v_1, ..., v_c`:
 
-### 1. Arithmetic Mean ($\mu$)
-$$\mu = \frac{1}{c}\sum_{i=1}^{c} v_i$$
+### 1. Arithmetic Mean (μ)
 
-### 2. Sample Variance ($s^2$)
-Calculated using Bessel's correction ($c-1$ denominator) for an unbiased estimate:
-$$s^2 = \frac{\sum_{i=1}^{c} v_i^2 - c \cdot \mu^2}{c - 1}$$
+```text
+μ = (1 / c) * Σ(v_i)
+```
 
-### 3. Sample Standard Deviation ($s$)
-$$s = \sqrt{\max(s^2, 0)}$$
-*(If $c \le 1$, standard deviation is defined as 0.0).*
+Where:
+- `c`: Count of valid (non-NaN) sample observations across the 10 repetitions.
+- `v_i`: Metric value recorded for repetition `i`.
+
+### 2. Sample Variance (s²)
+
+Calculated using Bessel's correction (`c - 1` denominator) for an unbiased estimate:
+
+```text
+s² = [ Σ(v_i²) - c · μ² ] / (c - 1)
+```
+
+*(Note: Clamped to 0 if floating-point rounding yields an infinitesimal negative value).*
+
+### 3. Sample Standard Deviation (s)
+
+```text
+s = √( max(s², 0) )
+```
+
+*(If valid sample count `c ≤ 1`, standard deviation is defined as 0.0).*
 
 ## Missing Data Handling
 

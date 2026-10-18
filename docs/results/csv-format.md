@@ -4,7 +4,7 @@ This reference documents the schema and units of the final aggregated datasets.
 
 ## `summary_aggregated.csv` Schema
 
-Each row corresponds to one unique `(protocol, scenario)` combination evaluated over 10 repetitions ($N=10$).
+Each row corresponds to one unique `(protocol, scenario)` combination evaluated over 10 repetitions (`N = 10`).
 
 | Column | Type | Unit | Description |
 | --- | --- | --- | --- |

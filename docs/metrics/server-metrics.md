@@ -8,15 +8,19 @@ Server-side resource utilization metrics are collected by `cAdvisor` directly fr
 
 Measures the total CPU time consumed by the target container (`backend` or `caddy`) normalized to single-core percentage (where 100% = 1.0 full CPU core utilized):
 
-$$\text{CPU \%} = \text{avg\_over\_time}\left( \left( \sum \text{rate}( \text{container\_cpu\_usage\_seconds\_total}[5s] ) \times 100 \right)[60s:5s] \right)$$
+```promql
+avg_over_time((sum(rate(container_cpu_usage_seconds_total[5s])) * 100)[60s:5s])
+```
 
-- Evaluated across the 60s sustained window sampled at 5-second sub-intervals.
-- Accurately captures both user-space and kernel-space context switching overhead.
+- Evaluated across the 60-second sustained window sampled at 5-second sub-intervals.
+- Accurately captures both user-space execution and kernel-space network socket overhead.
 
 ### 2. Memory Working Set (MB)
 
 Measures the active resident memory required by the container:
 
-$$\text{Memory (MB)} = \frac{\text{avg\_over\_time}\left( \sum \text{container\_memory\_working\_set\_bytes}[60s:5s] \right)}{1024 \times 1024}$$
+```promql
+avg_over_time(sum(container_memory_working_set_bytes)[60s:5s]) / (1024 * 1024)
+```
 
 - Using `working_set_bytes` instead of total memory prevents inactive filesystem page cache from inflating utilization numbers.

@@ -1,6 +1,5 @@
 # export_results.sh
-
-`scripts/export_results.sh` extracts metric slices from Prometheus for each run's steady-state window ($t_{warmup}+10\text{s}$ to $t_{cooldown}-10\text{s}$), calculates summary statistics, and generates CSV output files.
+`scripts/export_results.sh` extracts metric slices from Prometheus for each run's steady-state window (`t = 10s` to `t = 70s`), calculates summary statistics, and generates CSV output files.
 
 ## Usage
 

@@ -7,8 +7,7 @@
 The test matrix consists of:
 - **3 Protocols**: HTTP/1.1 (`h1`), HTTP/2 (`h2`), HTTP/3 (`h3`)
 - **5 Scenarios**: S1 (LAN baseline), S2 (High Latency WAN), S3 (Packet Loss), S4 (Constrained Bandwidth), S5 (Adverse Combined)
-- **10 Repetitions** per combination
-- Total = $3 \times 5 \times 10 = 150$ runs.
+- **Total**: 3 × 5 × 10 = 150 runs.
 
 ## Usage
 

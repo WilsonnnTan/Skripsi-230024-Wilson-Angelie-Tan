@@ -20,5 +20,5 @@ results/
 | --- | --- | --- |
 | `run_index.csv` | 150 | Catalog of all completed runs with exact unix start/end epoch stamps |
 | `summary.csv` | 150 | Sustained-window throughput, percentiles, error rate, and server resource metrics for each individual run |
-| `summary_aggregated.csv` | 15 | Statistical mean ($\mu$) and standard deviation ($s$) for each of the $3 \times 5$ condition combinations |
+| `summary_aggregated.csv` | 15 | Statistical mean (μ) and standard deviation (s) for each of the 3 × 5 condition combinations |
 | `summary_by_phase.csv` | 450 | Phase-by-phase breakdown (warmup, sustained, cooldown) for transient behavior analysis |

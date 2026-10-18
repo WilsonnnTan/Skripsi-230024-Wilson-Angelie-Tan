@@ -32,7 +32,7 @@ graph LR
 
 ## Data Slicing Principle
 
-All metrics are evaluated exclusively over the **60-second sustained steady-state window** ($t_{warmup}=10\text{s}$ to $t_{cooldown}=70\text{s}$). Startup connection handshakes and cooldown drain periods are deliberately excluded from measurement.
+All metrics are evaluated exclusively over the **60-second sustained steady-state window** (`t = 10s` to `t = 70s`). Startup connection handshakes and cooldown drain periods are deliberately excluded from measurement.
 
 ## Detail Pages
 
