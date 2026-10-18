@@ -4,53 +4,12 @@ The testbed is a fully Dockerized environment that measures HTTP protocol perfor
 
 ## Architecture Diagram
 
-The following diagram shows the complete system architecture, including all three Docker networks and the data flow between services:
+The following diagram illustrates the complete testbed topology and component interactions across the three isolated Docker networks:
 
-```mermaid
-graph TB
-    subgraph Host["🖥️ Host Machine"]
-        subgraph edge_net["edge_net 172.28.0.0/24"]
-            h2load_1["h2load #1"]
-            h2load_2["h2load #2"]
-            h2load_N["h2load #3–#10\n(8 more containers)"]
-            caddy_edge["Caddy\n:8443 HTTP/1.1\n:8444 HTTP/2\n:8445 HTTP/3"]
-            
-            h2load_1 -->|"Request &\nResponse"| caddy_edge
-            h2load_2 -->|"Request &\nResponse"| caddy_edge
-            h2load_N -->|"Request &\nResponse"| caddy_edge
-        end
+![System Architecture](../.gitbook/assets/design.png)
 
-        docker_tc["docker-tc\n(Traffic Control)"]
-        docker_tc -->|"Network\nEmulation"| h2load_1
-        docker_tc -->|"Network\nEmulation"| h2load_2
-        docker_tc -->|"Network\nEmulation"| h2load_N
+*Figure 1: High-level testbed architecture showing `edge_net`, `backend_net`, and `monitoring_net`.*
 
-        subgraph backend_net["backend_net 172.29.0.0/24"]
-            caddy_backend["Caddy"]
-            backend["Backend\n(Express.js)"]
-            caddy_backend -->|"Request &\nResponse"| backend
-        end
-
-        subgraph monitoring_net["monitoring_net 172.30.0.0/24"]
-            cadvisor["cAdvisor"]
-            exporter["h2load-exporter\n(Read h2load Logs)"]
-            prometheus["Prometheus"]
-            grafana["Grafana"]
-            
-            cadvisor -->|"Scrape\nMetrics"| prometheus
-            exporter -->|"Scrape\nMetrics"| prometheus
-            prometheus -->|"Query\nData"| grafana
-        end
-
-        cadvisor -.->|"Read Resource\nMetrics"| backend
-        cadvisor -.->|"Read Resource\nMetrics"| caddy_edge
-    end
-
-    style edge_net fill:#fff3e0,stroke:#e65100,color:#e65100
-    style backend_net fill:#fff3e0,stroke:#e65100,color:#e65100
-    style monitoring_net fill:#fff3e0,stroke:#e65100,color:#e65100
-    style Host fill:#fafafa,stroke:#333,color:#333
-```
 
 ## Request Flow
 
