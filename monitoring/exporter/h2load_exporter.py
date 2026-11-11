@@ -22,13 +22,34 @@
 # h2load --log-file columns are TAB-separated:
 #     <request start time, microseconds since epoch> \t <status> \t <duration us>
 # status == -1 marks a failed request.
+#
+# FINAL per-run metrics (h2load_final_*)
+# -----------------------------------------------------------------------------
+# The rolling gauges above are approximate (10 s trailing window, edge effects at
+# the phase boundaries). For the "Aggregate Analysis" dashboard the exporter ALSO
+# publishes, once a run has finished, the exact per-run numbers that
+# scripts/export_results.sh writes to results/summary.csv:
+#   * client metrics: scripts/compute_percentiles.compute_metrics() (same code),
+#   * server metrics: the same PromQL as export_results.sh server_avg(), queried
+#     at the run's recorded sustained_end over the recorded sustained window.
+# Averaging h2load_final_* over the repetitions therefore reproduces
+# results/summary_aggregated.csv. Runs are read from results/run_index.csv.
+#
+#   h2load_final_throughput_rps / _latency_p50_ms / _p90_ms / _p95_ms / _p99_ms
+#   h2load_final_error_rate_pct
+#   h2load_final_cpu_caddy_pct / _mem_caddy_mb / _cpu_backend_pct / _mem_backend_mb
 # =============================================================================
 
+import csv
 import glob
 import json
+import math
 import os
+import sys
 import threading
 import time
+import urllib.parse
+import urllib.request
 from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -38,6 +59,23 @@ LIVE_DIR = os.environ.get("LIVE_DIR", "/results/live")
 WINDOW_S = float(os.environ.get("WINDOW_S", "10"))
 
 CURRENT_RUN_FILE = os.path.join(LIVE_DIR, "current_run.json")
+
+# ---- final per-run metrics (must mirror scripts/export_results.sh defaults) --
+RESULTS_DIR = os.environ.get("RESULTS_DIR", "/results")
+SCRIPTS_DIR = os.environ.get("SCRIPTS_DIR", "/scripts")
+PROM_URL = os.environ.get("PROM_URL", "http://prometheus:9090")
+WARMUP_S = float(os.environ.get("WARMUP_S", "10"))
+SUSTAINED_S = float(os.environ.get("SUSTAINED_S", "60"))
+COOLDOWN_S = float(os.environ.get("COOLDOWN_S", "10"))
+CPU_RATE_WINDOW = os.environ.get("CPU_RATE_WINDOW", "5s")
+QUERY_STEP = os.environ.get("QUERY_STEP", "5s")
+FINAL_REFRESH_S = float(os.environ.get("FINAL_REFRESH_S", "10"))
+# Wait this long after sustained_end before querying server metrics, so the last
+# cAdvisor scrapes are in Prometheus; after FINAL_NAN_AFTER_S an empty result is
+# accepted as NaN (export_results.sh would record NaN too).
+FINAL_SETTLE_S = float(os.environ.get("FINAL_SETTLE_S", "15"))
+FINAL_NAN_AFTER_S = float(os.environ.get("FINAL_NAN_AFTER_S", "90"))
+INDEX_FILE = os.path.join(RESULTS_DIR, "run_index.csv")
 
 # ---- rolling state (guarded by _lock) --------------------------------------
 _lock = threading.Lock()
@@ -137,7 +175,7 @@ def _render_metrics():
         meta = _load_current_run()
         if meta is None:
             # No run in progress: expose nothing but a liveness gauge.
-            return "# no run in progress\nh2load_exporter_up 1\n"
+            return "# no run in progress\nh2load_exporter_up 1\n" + _final_text()
         if meta.get("run_id") != _run_id:
             _reset(meta)
         _ingest_new_lines()
@@ -186,7 +224,182 @@ def _render_metrics():
             lines.append(f"h2load_req_duration_ms_p90{tag} {_percentile(durs, 0.90):.4f}")
             lines.append(f"h2load_req_duration_ms_p95{tag} {_percentile(durs, 0.95):.4f}")
             lines.append(f"h2load_req_duration_ms_p99{tag} {_percentile(durs, 0.99):.4f}")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n" + _final_text()
+
+
+# ============================================================================
+# FINAL per-run metrics
+# ============================================================================
+_final_lock = threading.Lock()
+_final = {}          # run_id -> {"labels": (protocol, scenario, rep), "m": {metric: float}}
+
+# metric exposed name -> key inside the computed dict
+_FINAL_METRICS = [
+    ("h2load_final_throughput_rps", "throughput_rps"),
+    ("h2load_final_latency_p50_ms", "latency_p50"),
+    ("h2load_final_latency_p90_ms", "latency_p90"),
+    ("h2load_final_latency_p95_ms", "latency_p95"),
+    ("h2load_final_latency_p99_ms", "latency_p99"),
+    ("h2load_final_error_rate_pct", "error_rate_pct"),
+    ("h2load_final_cpu_caddy_pct", "cpu_caddy_pct"),
+    ("h2load_final_mem_caddy_mb", "mem_caddy_mb"),
+    ("h2load_final_cpu_backend_pct", "cpu_backend_pct"),
+    ("h2load_final_mem_backend_mb", "mem_backend_mb"),
+]
+
+
+class _PromUnavailable(Exception):
+    pass
+
+
+def _promq(query, at):
+    """Prometheus instant query -> float (NaN when the result is empty).
+
+    Same request as export_results.sh promq(): GET /api/v1/query?query=..&time=..
+    and the first series' value. Raises _PromUnavailable on transport errors so
+    the caller retries instead of caching a wrong NaN.
+    """
+    url = PROM_URL + "/api/v1/query?" + urllib.parse.urlencode({"query": query, "time": at})
+    try:
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            data = json.load(resp)
+        result = data["data"]["result"]
+    except Exception as exc:  # network error, bad JSON, status != success ...
+        raise _PromUnavailable(str(exc))
+    if not result:
+        return float("nan")
+    return float(result[0]["value"][1])
+
+
+def _server_avg(at, win):
+    """Mirror of export_results.sh server_avg(): returns the 4 server metrics."""
+    out = {}
+    for svc in ("caddy", "backend"):
+        sel = 'container_label_com_docker_compose_service="%s"' % svc
+        out["cpu_%s_pct" % svc] = _promq(
+            "avg_over_time((sum(rate(container_cpu_usage_seconds_total{%s}[%s])) * 100)[%ds:%s])"
+            % (sel, CPU_RATE_WINDOW, win, QUERY_STEP), at)
+        out["mem_%s_mb" % svc] = _promq(
+            "avg_over_time(sum(container_memory_working_set_bytes{%s})[%ds:%s]) / 1048576"
+            % (sel, win, QUERY_STEP), at)
+    return out
+
+
+def _import_compute_percentiles():
+    if SCRIPTS_DIR not in sys.path:
+        sys.path.insert(0, SCRIPTS_DIR)
+    import compute_percentiles  # scripts/compute_percentiles.py (mounted read-only)
+    return compute_percentiles
+
+
+def _num(v):
+    """float or NaN for anything that is not a finite number (like jnum in bash)."""
+    if isinstance(v, (int, float)) and not (isinstance(v, float) and math.isnan(v)):
+        return float(v)
+    return float("nan")
+
+
+def _read_success_rows():
+    """Successful runs from run_index.csv, in file order (same filter as the CSV)."""
+    try:
+        with open(INDEX_FILE, "r", encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+    except (FileNotFoundError, OSError):
+        return []
+    return [r for r in rows if (r.get("status") or "") == "success" and r.get("run_id")]
+
+
+def _finalize_run(row, pct, now_s):
+    """Compute the final metrics of one run, or return None to retry later."""
+    sus_end_s = (row.get("sustained_end_epoch") or "").strip()
+    end_s = (row.get("end_epoch") or "").strip()
+    sus_end = int(sus_end_s) if sus_end_s else int(end_s)
+    sus_start_s = (row.get("sustained_start_epoch") or "").strip()
+    sus_start = int(sus_start_s) if sus_start_s else sus_end - int(SUSTAINED_S)
+    win = sus_end - sus_start
+    if win <= 0:
+        win = int(SUSTAINED_S)
+
+    age = now_s - sus_end
+    if age < FINAL_SETTLE_S:
+        return None                       # server samples not all in Prometheus yet
+
+    host_logdir = os.path.join(RESULTS_DIR, "raw", os.path.basename(row.get("log_dir") or row["run_id"]))
+    sus = pct.compute_metrics(host_logdir, WARMUP_S, SUSTAINED_S, COOLDOWN_S)["sustained"]
+    m = {
+        "throughput_rps": _num(sus.get("rps")),
+        "latency_p50": _num(sus.get("p50")),
+        "latency_p90": _num(sus.get("p90")),
+        "latency_p95": _num(sus.get("p95")),
+        "latency_p99": _num(sus.get("p99")),
+        "error_rate_pct": _num(sus.get("error_rate_pct")),
+    }
+    server = _server_avg(sus_end, win)    # may raise _PromUnavailable -> retry
+    if any(math.isnan(v) for v in server.values()) and age < FINAL_NAN_AFTER_S:
+        return None                       # maybe not ingested yet; try again soon
+    m.update(server)
+    return {"labels": (row["protocol"], row["scenario"], row["repetition"]), "m": m}
+
+
+def _finalizer_loop():
+    """Background thread: finalize finished runs one at a time, between runs."""
+    try:
+        pct = _import_compute_percentiles()
+    except Exception as exc:
+        print("[h2load-exporter] final metrics disabled: cannot import "
+              "compute_percentiles from %s (%s)" % (SCRIPTS_DIR, exc), flush=True)
+        return
+    while True:
+        did_work = False
+        try:
+            meta = _load_current_run()
+            if not (meta and meta.get("run_id")):      # never compete with a live run
+                for row in _read_success_rows():
+                    rid = row["run_id"]
+                    with _final_lock:
+                        if rid in _final:
+                            continue
+                    try:
+                        res = _finalize_run(row, pct, time.time())
+                    except _PromUnavailable as exc:
+                        print("[h2load-exporter] Prometheus unavailable for %s: %s" % (rid, exc), flush=True)
+                        break
+                    except Exception as exc:
+                        print("[h2load-exporter] cannot finalize %s: %s" % (rid, exc), flush=True)
+                        continue
+                    if res is None:
+                        continue
+                    with _final_lock:
+                        _final[rid] = res
+                    did_work = True
+                    break                                # re-check "run in progress" between runs
+        except Exception as exc:
+            print("[h2load-exporter] finalizer error: %s" % exc, flush=True)
+        if not did_work:
+            time.sleep(FINAL_REFRESH_S)
+
+
+def _final_text():
+    """Render the h2load_final_* gauges (NaN samples are omitted, like the CSV mean)."""
+    with _final_lock:
+        items = list(_final.values())
+    if not items:
+        return ""
+    lines = []
+    for name, key in _FINAL_METRICS:
+        samples = []
+        for it in items:
+            v = it["m"].get(key, float("nan"))
+            if v is None or (isinstance(v, float) and (math.isnan(v) or math.isinf(v))):
+                continue
+            protocol, scenario, rep = it["labels"]
+            samples.append('%s{protocol="%s",scenario="%s",repetition="%s"} %r'
+                           % (name, protocol, scenario, rep, float(v)))
+        if samples:
+            lines.append("# HELP %s final per-run value (same as results/summary.csv)" % name)
+            lines.append("# TYPE %s gauge" % name)
+            lines.extend(samples)
+    return "\n".join(lines) + "\n" if lines else ""
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -206,7 +419,9 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    threading.Thread(target=_finalizer_loop, name="finalizer", daemon=True).start()
     srv = ThreadingHTTPServer((HTTP_BIND, HTTP_PORT), Handler)
     print(f"[h2load-exporter] listening on {HTTP_BIND}:{HTTP_PORT}, "
           f"live dir={LIVE_DIR}, window={WINDOW_S}s", flush=True)
     srv.serve_forever()
+    

@@ -6,7 +6,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "links": [],
-  "description": "AGGREGATE ANALYSIS view. Set the time picker to the campaign window ($__range). Each bar chart puts scenario on the x-axis with one bar per protocol, aggregated across the repetitions in range (sustained phase only). Authoritative mean±std lives in results/summary_aggregated.csv — Grafana here is for exploration.",
+  "description": "Values are the exact per-run results published by h2load-exporter as h2load_final_* (same code and PromQL as scripts/export_results.sh), averaged over the repetitions. They reproduce results/summary_aggregated.csv. The time range only needs to end after the last run.",
   "panels": [
     {
       "id": 10,
@@ -108,9 +108,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (h2load_reqs_per_second{phase=\"sustained\"}))[$__range:1m]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_throughput_rps)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -246,9 +247,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "100 * avg by (protocol, scenario) (avg_over_time(h2load_error_rate{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_error_rate_pct)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -384,9 +386,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p50{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p50_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -522,9 +525,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p90{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p90_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -660,9 +664,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p95_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -798,9 +803,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p99{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p99_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -853,7 +859,7 @@
     },
     {
       "id": 4,
-      "title": "Comparison table (sustained, aggregated over range)",
+      "title": "Comparison table (sustained, mean of the repetitions = results/summary_aggregated.csv)",
       "type": "table",
       "datasource": {
         "type": "prometheus",
@@ -980,9 +986,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (protocol, scenario) (h2load_reqs_per_second{phase=\"sustained\"}))[$__range:1m]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_throughput_rps)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         },
         {
           "refId": "P50",
@@ -990,9 +997,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p50{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p50_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         },
         {
           "refId": "P90",
@@ -1000,9 +1008,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p90{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p90_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         },
         {
           "refId": "P95",
@@ -1010,9 +1019,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p95{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p95_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         },
         {
           "refId": "P99",
@@ -1020,9 +1030,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time(h2load_req_duration_ms_p99{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_latency_p99_ms)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         },
         {
           "refId": "ERR",
@@ -1030,9 +1041,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "100 * avg by (protocol, scenario) (avg_over_time(h2load_error_rate{phase=\"sustained\"}[$__range]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_error_rate_pct)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -1153,9 +1165,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"caddy\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_cpu_caddy_pct)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -1291,9 +1304,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"caddy\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_mem_caddy_mb)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -1429,9 +1443,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"backend\"}[30s])) * 100 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_cpu_backend_pct)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [
@@ -1567,9 +1582,10 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg by (protocol, scenario) (avg_over_time((sum by (container_label_com_docker_compose_service) (container_memory_working_set_bytes{container_label_com_docker_compose_service=\"backend\"}) / 1048576 * on() group_left(protocol, scenario, repetition) (max by (protocol, scenario, repetition) (h2load_reqs_per_second{phase=\"sustained\"} > 0) * 0 + 1))[$__range:5s]))",
+          "expr": "avg by (protocol, scenario) (h2load_final_mem_backend_mb)",
           "format": "table",
-          "instant": true
+          "instant": true,
+          "range": false
         }
       ],
       "transformations": [

@@ -191,8 +191,21 @@ services:
       HTTP_PORT: "9115"
       LIVE_DIR: "/results/live"
       WINDOW_S: "10"
+      # Final per-run metrics (h2load_final_*): same code and PromQL as
+      # scripts/export_results.sh so the Aggregate dashboard reproduces
+      # results/summary_aggregated.csv. Phase lengths and the cAdvisor rate
+      # window / query step MUST match the campaign and export_results.sh.
+      RESULTS_DIR: "/results"
+      SCRIPTS_DIR: "/scripts"
+      PROM_URL: "http://prometheus:9090"
+      WARMUP_S: "10"
+      SUSTAINED_S: "60"
+      COOLDOWN_S: "10"
+      CPU_RATE_WINDOW: "5s"
+      QUERY_STEP: "5s"
     volumes:
       - ./results:/results:ro
+      - ./scripts:/scripts:ro
     networks:
       - monitoring_net
     cpuset: "${CPUSET_SUPPORT:-8-11}"
@@ -259,7 +272,7 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
       # Long retention: must cover the full 150-run campaign + analysis.
-      - --storage.tsdb.retention.time=30d
+      - --storage.tsdb.retention.time=5y
       - --web.enable-lifecycle
       - --query.lookback-delta=5m
       - --web.enable-admin-api
