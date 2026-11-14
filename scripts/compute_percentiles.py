@@ -32,14 +32,17 @@ def percentile(sorted_vals, q):
     return sorted_vals[lo] * (1 - frac) + sorted_vals[hi] * frac
 
 
-def main():
-    if len(sys.argv) < 2:
-        sys.stderr.write("usage: compute_percentiles.py <log_dir> [warmup_s sustained_s cooldown_s]\n")
-        sys.exit(2)
-    log_dir = sys.argv[1]
-    warmup = float(sys.argv[2]) if len(sys.argv) > 2 else 10.0
-    sustained = float(sys.argv[3]) if len(sys.argv) > 3 else 60.0
-    cooldown = float(sys.argv[4]) if len(sys.argv) > 4 else 10.0
+def compute_metrics(log_dir, warmup=10.0, sustained=60.0, cooldown=10.0):
+    """Exact per-phase client metrics for one run.
+
+    Importable entry point shared by the CLI below (export_results.sh) and the
+    live exporter (monitoring/exporter/h2load_exporter.py), so the CSV and the
+    Grafana "final" metrics come from the very same code.
+
+    Returns {"warmup"|"sustained"|"cooldown": {count, errors, rps,
+    error_rate_pct, p50, p90, p95, p99}} with durations in ms.
+    """
+    warmup, sustained, cooldown = float(warmup), float(sustained), float(cooldown)
 
     records = []  # (start_us, dur_ms, ok)
     for path in glob.glob(os.path.join(log_dir, "h2load_*.log")):
@@ -102,9 +105,21 @@ def main():
             "p95": percentile(durs, 0.95),
             "p99": percentile(durs, 0.99),
         }
-    json.dump(out, sys.stdout)
+    return out
+
+
+def main():
+    if len(sys.argv) < 2:
+        sys.stderr.write("usage: compute_percentiles.py <log_dir> [warmup_s sustained_s cooldown_s]\n")
+        sys.exit(2)
+    log_dir = sys.argv[1]
+    warmup = float(sys.argv[2]) if len(sys.argv) > 2 else 10.0
+    sustained = float(sys.argv[3]) if len(sys.argv) > 3 else 60.0
+    cooldown = float(sys.argv[4]) if len(sys.argv) > 4 else 10.0
+    json.dump(compute_metrics(log_dir, warmup, sustained, cooldown), sys.stdout)
     sys.stdout.write("\n")
 
 
 if __name__ == "__main__":
     main()
+    
